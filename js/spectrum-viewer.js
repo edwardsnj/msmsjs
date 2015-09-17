@@ -12,7 +12,7 @@ function spcls(container,tag) {
 }
 
 function tipcls(container,tag) {
-	return "d3-tip-"+spcls(container,tag)
+	return "d3-tip-"+spcls(container,tag);
 }
 
 function appendSpectrum(container, tag, width, height){
