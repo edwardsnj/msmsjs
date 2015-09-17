@@ -15,14 +15,12 @@ function setSvg(width, height, selecter, tag){
 		.attr("class", tag)
 		.attr("width", width)
 		.attr("height", height);
- }
- 
-
+}
 
 function showSpectrum(path, tag){
 	deleteGroup(tag);
 
-	var margin = {top: 10, bottom: 20, left: 60, right: 40};
+	var margin = {top: 10, bottom: 20, left: 80, right: 40};
 
 	var canvas =  d3.selectAll("svg" + tag);
 
@@ -99,8 +97,7 @@ function showSpectrum(path, tag){
 		var peptide = spectra[0].annotations[0].peptide;
 		var fragments = spectra[0].annotations[0].fragments;
 		var newFragments = [];
-		
-
+		var usedPeak = {}
 		
 		var maxPeaksInt = d3.max(peaks, function (d){ return d.int; });
 		var minPeaksInt = d3.min(peaks, function (d){ return d.int; });
@@ -124,7 +121,7 @@ function showSpectrum(path, tag){
 			.range([0, containerWidth]);
 			
 		var heightScale = d3.scale.linear()
-			.domain([0, maxPeaksInt * 1.2])
+			.domain([0, maxPeaksInt + 100*maxPeaksInt/containerHeight])
 			.range([0, containerHeight]);
 		
 		var xAxisScale = d3.scale.linear()
@@ -132,7 +129,7 @@ function showSpectrum(path, tag){
 			.range([0, containerWidth]);
 			
 		var yAxisScale = d3.scale.linear()
-			.domain([maxPeaksInt * 1.2, 0])
+			.domain([maxPeaksInt + 100*maxPeaksInt/containerHeight, 0])
 			.range([0, containerHeight]);
 		
 		var clickScale = d3.scale.linear()
@@ -255,7 +252,7 @@ function showSpectrum(path, tag){
 				.append("text")
 				.attr("x", -17 / 4)
 				.attr("y", function (d){ return heightScale(d.int); })
-				.text(function (d){ return d.label + getSubscript(d.subscript); })
+				.text(function (d){ return getLabel(d);})
 				.style("font-size", "17px")
 				.style("opacity", "0");
 
@@ -466,7 +463,8 @@ function showSpectrum(path, tag){
 		
 
 		
-		function appendFragments(fragment, i){		<!-- finds the biggest peak with in a .5 area, and appends a new fragment to it
+		function appendFragments(fragment, i){
+
 			var hasFoundPeak = false;
 			var bestPeak = {"int": 0, "mz": 0};
 			
@@ -479,21 +477,24 @@ function showSpectrum(path, tag){
 					}
 					hasFoundPeak = true;
 				}
+			}
+			
+			if (hasFoundPeak && isAboveThreshHold(bestPeak.int) && !usedPeak[bestPeak.mz]){
+					
+				usedPeak[bestPeak.mz] = true;
+
+				fragment.mz = bestPeak.mz;
+				fragment.int = bestPeak.int;
 				
-				else if (hasFoundPeak && (fragment.mz - peak.mz) <= -.5 && isAboveThreshHold(bestPeak.int) ){
-					fragment.mz = bestPeak.mz;
-					fragment.int = bestPeak.int;
-					
-					if(fragment.type == "b-ion"){
-						fragment.color = colorTheme.b; 
-					}
-					else if(fragment.type == "y-ion"){
-						fragment.color = colorTheme.y; 
-					}
-					
-					newFragments.push(fragment);
-					break;
+				if(fragment.type == "b-ion"){
+					fragment.color = colorTheme.b; 
 				}
+				else if(fragment.type == "y-ion"){
+					fragment.color = colorTheme.y; 
+				}
+
+				newFragments.push(fragment);
+
 			}
 		}
 		
@@ -548,6 +549,19 @@ function getSuperscript(num){
 	}
 		
 	return newSuperScript;
+}
+
+function getLabel(d) {
+  if ((d.type == 'y-ion') || (d.type == 'b-ion')) {
+    if (d.z == 1) {
+      return (d.label + getSubscript(d.subscript));
+    } else {
+      return (d.label + getSubscript(d.subscript) + getSuperscript(d.z) + '\u207A');
+      // return d.simplelabel;
+    }
+  } else {
+    return d.simplelabel;
+  }
 }
 
 function getSubscript(num){
