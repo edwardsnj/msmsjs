@@ -1,0 +1,131 @@
+
+<!doctype html>
+
+<html>
+
+<head>
+
+	<title>Prototype 5</title>
+	<meta charset="utf-8" />
+
+	
+	<link rel="stylesheet" href="css/spectrum-style-v1.css" type="text/css"></link>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+	<script src="js/spectrum-viewer-v2.2.js"></script>
+	
+	<!-- Temp css -->
+
+	<style> 
+
+	table, th, td {
+		border: 1px solid lightGrey;
+		border-collapse: collapse;
+	}
+
+        .scrollit {
+                overflow:scroll;
+                height:200px;
+        }
+</style>
+
+<script type="text/javascript">
+
+var ss = {}
+function handleclick(elt,path) {
+    if (elt.checked) {
+      if (!ss[elt.value]) {
+        setSvg(1000, 300, '.spectra', elt.value);
+        ss[elt.value] = true;
+      }
+      var el = document.getElementById('rows');
+      var checks = el.getElementsByTagName('input');
+      for (var i=0, len=checks.length; i<len; i++) {
+        if ( checks[i].type == 'checkbox' && checks[i].value == elt.value && checks[i] != elt) {
+          checks[i].checked = false;
+        }
+      }
+      elt.checked = true;
+      showSpectrum(path,'.'+elt.value);
+    } else {
+      elt.checked = true;
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+<div align="center" class="spectra"></div>
+<table border="0" align="center">
+<thead>
+<tr><th width="100px">Index</th><th width="100px">Scan</th><th width="800px">Peptide</th><th width="100px"></th></tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="4">
+<div class="scrollit">
+<table id="rows" border="0" >
+
+<tr><td width="100px">1</td><td width="100px">291</td><td width="800px">NMoEQTVK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/1-291-NM_oEQTVK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/1-291-NM_oEQTVK.json');"/></td></tr>
+<tr><td width="100px">2</td><td width="100px">292</td><td width="800px">NMoEQTVK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/2-292-NM_oEQTVK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/2-292-NM_oEQTVK.json');"/></td></tr>
+<tr><td width="100px">3</td><td width="100px">293</td><td width="800px">NMoEQTVK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/3-293-NM_oEQTVK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/3-293-NM_oEQTVK.json');"/></td></tr>
+<tr><td width="100px">4</td><td width="100px">294</td><td width="800px">NMoEQTVK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/4-294-NM_oEQTVK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/4-294-NM_oEQTVK.json');"/></td></tr>
+<tr><td width="100px">5</td><td width="100px">295</td><td width="800px">NMoEQTVK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/5-295-NM_oEQTVK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/5-295-NM_oEQTVK.json');"/></td></tr>
+<tr><td width="100px">106</td><td width="100px">705</td><td width="800px">EEQAEPDGTEVADK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/106-705-EEQAEPDGTEVADK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/106-705-EEQAEPDGTEVADK.json');"/></td></tr>
+<tr><td width="100px">279</td><td width="100px">938</td><td width="800px">ELNYGPHQWR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/279-938-ELNYGPHQWR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/279-938-ELNYGPHQWR.json');"/></td></tr>
+<tr><td width="100px">323</td><td width="100px">994</td><td width="800px">VAAAFPGDVDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/323-994-VAAAFPGDVDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/323-994-VAAAFPGDVDR.json');"/></td></tr>
+<tr><td width="100px">326</td><td width="100px">997</td><td width="800px">VAAAFPGDVDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/326-997-VAAAFPGDVDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/326-997-VAAAFPGDVDR.json');"/></td></tr>
+<tr><td width="100px">331</td><td width="100px">1004</td><td width="800px">ENQSILITGESGAGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/331-1004-ENQSILITGESGAGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/331-1004-ENQSILITGESGAGK.json');"/></td></tr>
+<tr><td width="100px">333</td><td width="100px">1006</td><td width="800px">ENQSILITGESGAGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/333-1006-ENQSILITGESGAGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/333-1006-ENQSILITGESGAGK.json');"/></td></tr>
+<tr><td width="100px">355</td><td width="100px">1039</td><td width="800px">NFFSASCmVPCmADQSSFPK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/355-1039-NFFSASC_mVPC_mADQSSFPK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/355-1039-NFFSASC_mVPC_mADQSSFPK.json');"/></td></tr>
+<tr><td width="100px">361</td><td width="100px">1049</td><td width="800px">AIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/361-1049-AIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/361-1049-AIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">364</td><td width="100px">1052</td><td width="800px">AIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/364-1052-AIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/364-1052-AIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">367</td><td width="100px">1055</td><td width="800px">AIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/367-1055-AIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/367-1055-AIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">368</td><td width="100px">1056</td><td width="800px">AIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/368-1056-AIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/368-1056-AIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">374</td><td width="100px">1064</td><td width="800px">TNFDAFPDK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/374-1064-TNFDAFPDK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/374-1064-TNFDAFPDK.json');"/></td></tr>
+<tr><td width="100px">387</td><td width="100px">1081</td><td width="800px">APLDNDIGVSEATR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/387-1081-APLDNDIGVSEATR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/387-1081-APLDNDIGVSEATR.json');"/></td></tr>
+<tr><td width="100px">450</td><td width="100px">1160</td><td width="800px">TLEDQVSELK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/450-1160-TLEDQVSELK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/450-1160-TLEDQVSELK.json');"/></td></tr>
+<tr><td width="100px">453</td><td width="100px">1163</td><td width="800px">TLEDQVSELK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/453-1163-TLEDQVSELK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/453-1163-TLEDQVSELK.json');"/></td></tr>
+<tr><td width="100px">454</td><td width="100px">1164</td><td width="800px">TLEDQVSELK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/454-1164-TLEDQVSELK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/454-1164-TLEDQVSELK.json');"/></td></tr>
+<tr><td width="100px">466</td><td width="100px">1180</td><td width="800px">VDEDQPFPAVPK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/466-1180-VDEDQPFPAVPK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/466-1180-VDEDQPFPAVPK.json');"/></td></tr>
+<tr><td width="100px">481</td><td width="100px">1199</td><td width="800px">EDQVFPMNPPK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/481-1199-EDQVFPMNPPK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/481-1199-EDQVFPMNPPK.json');"/></td></tr>
+<tr><td width="100px">483</td><td width="100px">1201</td><td width="800px">EDQVFPMNPPK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/483-1201-EDQVFPMNPPK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/483-1201-EDQVFPMNPPK.json');"/></td></tr>
+<tr><td width="100px">484</td><td width="100px">1202</td><td width="800px">EDQVFPMNPPK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/484-1202-EDQVFPMNPPK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/484-1202-EDQVFPMNPPK.json');"/></td></tr>
+<tr><td width="100px">490</td><td width="100px">1210</td><td width="800px">IDPNAWVER.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/490-1210-IDPNAWVER.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/490-1210-IDPNAWVER.json');"/></td></tr>
+<tr><td width="100px">519</td><td width="100px">1255</td><td width="800px">DTQVVLAMoPYDTPVPGYR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/519-1255-DTQVVLAM_oPYDTPVPGYR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/519-1255-DTQVVLAM_oPYDTPVPGYR.json');"/></td></tr>
+<tr><td width="100px">521</td><td width="100px">1257</td><td width="800px">DTQVVLAMoPYDTPVPGYR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/521-1257-DTQVVLAM_oPYDTPVPGYR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/521-1257-DTQVVLAM_oPYDTPVPGYR.json');"/></td></tr>
+<tr><td width="100px">523</td><td width="100px">1259</td><td width="800px">DTQVVLAMoPYDTPVPGYR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/523-1259-DTQVVLAM_oPYDTPVPGYR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/523-1259-DTQVVLAM_oPYDTPVPGYR.json');"/></td></tr>
+<tr><td width="100px">524</td><td width="100px">1260</td><td width="800px">DTQVVLAMoPYDTPVPGYR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/524-1260-DTQVVLAM_oPYDTPVPGYR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/524-1260-DTQVVLAM_oPYDTPVPGYR.json');"/></td></tr>
+<tr><td width="100px">533</td><td width="100px">1275</td><td width="800px">DWENPGVTQLNR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/533-1275-DWENPGVTQLNR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/533-1275-DWENPGVTQLNR.json');"/></td></tr>
+<tr><td width="100px">535</td><td width="100px">1277</td><td width="800px">DWENPGVTQLNR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/535-1277-DWENPGVTQLNR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/535-1277-DWENPGVTQLNR.json');"/></td></tr>
+<tr><td width="100px">549</td><td width="100px">1297</td><td width="800px">ITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/549-1297-ITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/549-1297-ITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">647</td><td width="100px">1427</td><td width="800px">LYPNDNFFEGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/647-1427-LYPNDNFFEGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/647-1427-LYPNDNFFEGK.json');"/></td></tr>
+<tr><td width="100px">650</td><td width="100px">1430</td><td width="800px">LYPNDNFFEGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/650-1430-LYPNDNFFEGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/650-1430-LYPNDNFFEGK.json');"/></td></tr>
+<tr><td width="100px">653</td><td width="100px">1433</td><td width="800px">LYPNDNFFEGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/653-1433-LYPNDNFFEGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/653-1433-LYPNDNFFEGK.json');"/></td></tr>
+<tr><td width="100px">654</td><td width="100px">1434</td><td width="800px">LYPNDNFFEGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/654-1434-LYPNDNFFEGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/654-1434-LYPNDNFFEGK.json');"/></td></tr>
+<tr><td width="100px">669</td><td width="100px">1455</td><td width="800px">HADSVAELGEQIDNLQR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/669-1455-HADSVAELGEQIDNLQR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/669-1455-HADSVAELGEQIDNLQR.json');"/></td></tr>
+<tr><td width="100px">671</td><td width="100px">1458</td><td width="800px">HADSVAELGEQIDNLQR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/671-1458-HADSVAELGEQIDNLQR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/671-1458-HADSVAELGEQIDNLQR.json');"/></td></tr>
+<tr><td width="100px">673</td><td width="100px">1460</td><td width="800px">HADSVAELGEQIDNLQR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/673-1460-HADSVAELGEQIDNLQR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/673-1460-HADSVAELGEQIDNLQR.json');"/></td></tr>
+<tr><td width="100px">706</td><td width="100px">1503</td><td width="800px">LITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/706-1503-LITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/706-1503-LITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">707</td><td width="100px">1504</td><td width="800px">LITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/707-1504-LITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/707-1504-LITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">708</td><td width="100px">1505</td><td width="800px">LITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/708-1505-LITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/708-1505-LITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">709</td><td width="100px">1506</td><td width="800px">LITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/709-1506-LITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/709-1506-LITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">710</td><td width="100px">1507</td><td width="800px">LITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/710-1507-LITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/710-1507-LITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">711</td><td width="100px">1508</td><td width="800px">LITAIGDVVNHDPVVGDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/711-1508-LITAIGDVVNHDPVVGDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/711-1508-LITAIGDVVNHDPVVGDR.json');"/></td></tr>
+<tr><td width="100px">720</td><td width="100px">1521</td><td width="800px">VLYPNDNFFEGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/720-1521-VLYPNDNFFEGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/720-1521-VLYPNDNFFEGK.json');"/></td></tr>
+<tr><td width="100px">723</td><td width="100px">1524</td><td width="800px">VLYPNDNFFEGK.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/723-1524-VLYPNDNFFEGK.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/723-1524-VLYPNDNFFEGK.json');"/></td></tr>
+<tr><td width="100px">847</td><td width="100px">1717</td><td width="800px">VNWLGLGPQENYPDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/847-1717-VNWLGLGPQENYPDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/847-1717-VNWLGLGPQENYPDR.json');"/></td></tr>
+<tr><td width="100px">850</td><td width="100px">1720</td><td width="800px">VNWLGLGPQENYPDR.</td><td width="100px"><input value="spectrum1" type="checkbox" onclick="handleclick(this,'data/850-1720-VNWLGLGPQENYPDR.json');"/>&nbsp;<input value="spectrum2" type="checkbox" onclick="handleclick(this,'data/850-1720-VNWLGLGPQENYPDR.json');"/></td></tr>
+
+</table>
+</div>
+</td></tr>
+</tbody>
+</table>
+
+</body>
+
+</html>
+
