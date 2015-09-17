@@ -8,74 +8,36 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
 	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 	<script src="js/spectrum-viewer.js"></script>
-	
-	<style> 
-        .scrollit {
-                overflow:scroll;
-                height:400px;
-        }
-        </style>
 
 <script type="text/javascript">
-var ss = {}
-function handleclick(elt) {
-    if (elt.checked) {
-      if (!ss[elt.value]) {
-        setSvg(1000, 400, '.spectra', elt.value);
-        ss[elt.value] = true;
-      }
-      var el = document.getElementById('rows');
-      var checks = el.getElementsByTagName('input');
-      for (var i=0, len=checks.length; i<len; i++) {
-        if ( checks[i].type == 'checkbox' && checks[i].value == elt.value && checks[i] != elt) {
-          checks[i].checked = false;
-        }
-      }
-      elt.checked = true; showSpectrum(elt.getAttribute('specdata'),'.'+elt.value); } else { elt.checked = true; }
-}
-function handleclicknew(elt) {
-    var rowelt = elt
+function handleclicknew(rowelt) {
+    var specid = "spectrum-"+rowelt.getAttribute('specdata').split('/')[2].split('.')[0];
     var tableelt = rowelt.parentNode;
-    if (rowelt.nextSibling && rowelt.nextSibling.id != 'spectra') {
-      var specelt = document.getElementById('spectra');
-      if (specelt) {
-        tableelt.removeChild(specelt);
-        var newrow = specelt;
-      } else {
-        var newrow = document.createElement("tr");
-	newrow.id = 'spectra';
-        var newtd = document.createElement("td");
-	newtd.setAttribute('colspan',7);
-        var newdiv = document.createElement("div");
-	newdiv.setAttribute('class','spectra');
-        newtd.appendChild(newdiv);
-        newrow.appendChild(newtd);
-      }
+    if (rowelt.nextSibling && rowelt.nextSibling.id == specid) {
+      var specelt = document.getElementById(specid);
+      tableelt.removeChild(specelt);
+    } else {
+      var newrow = document.createElement("tr");
+      newrow.id = specid;
+      var newtd = document.createElement("td");
+      newtd.setAttribute('colspan',7);
+      var newdiv = document.createElement("div");
+      newdiv.setAttribute('class',specid);
+      newtd.appendChild(newdiv);
+      newrow.appendChild(newtd);
       if (rowelt.nextSibling) {
-	tableelt.insertBefore(newrow,rowelt.nextSibling);
+        tableelt.insertBefore(newrow,rowelt.nextSibling);
       } else {
 	tableelt.appendChild(newrow);
       }
-      if (!specelt) {
-        setSvg(1000, 400, '.spectra', 'spectrum1');
-      } 
-      showSpectrum(elt.getAttribute('specdata'),'.spectrum1');
-    } else {
-      tableelt.removeChild(rowelt.nextSibling);
+      appendSpectrum(specid,'spectrum1',1000,400);
+      showSpectrum(specid,'spectrum1',rowelt.getAttribute('specdata'),0.05);
     }
-    elt.scrollIntoView();
-}
-function onloadhandler() {
-    var el = document.getElementById('rows');
-    var checks = el.getElementsByTagName('input');
-    var elt = checks[0];
-    elt.checked = true;
-    handleclick(elt);
 }
 
 </script>
 </head>
-<body onload="">
+<body>
 <table border="0" align="center" width="1000px">
 <thead>
 <tr><th>Scan</th><th>Rank</th><th>Prec. m/z</th><th>Charge</th><th>E-value</th><th>Peptide</th></tr>

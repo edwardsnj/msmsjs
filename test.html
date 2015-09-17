@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://cdn.rawgit.com/edwardsnj/msmsjs/ef1d8ec6108e21b4e3de035cbd01ee53fff0ebc9/css/spectrum-viewer.css" type="text/css"></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+    <!-- <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script> -->
+    <script src="js/d3.tip.v0.6.3.js"></script>
+    <!-- <script src="http://cdn.rawgit.com/edwardsnj/msmsjs/ef1d8ec6108e21b4e3de035cbd01ee53fff0ebc9/js/spectrum-viewer.js"></script> -->
+    <script src="js/spectrum-viewer.js"></script>
+    <script type="text/javascript">
+      var width = 1000;
+      var height = 300;
+      var tol = 0.05;
+      var ss = {};
+      function showSpec(panel,tag,path) {
+        var key = panel+'_'+tag;
+        if (!ss[key]) { 
+	  appendSpectrum(panel, tag, width, height);
+          ss[key] = true;
+        }
+	showSpectrum(panel, tag, path, tol);
+      }
+      function delSpec(panel,tag) {
+        deleteSpectrum(panel, tag);
+	var key = panel+'_'+tag;
+	ss[key] = false;
+      }
+    </script>
+</head>
+<body>
+    <div class="specpanel1"></div>
+    <div class="specpanel2"></div>
+    
+    <script type="text/javascript">
+        showSpec('specpanel1','spec1','data/17mix_test2/466-1180-VDEDQPFPAVPK.json');
+        showSpec('specpanel1','spec2','data/17mix_test2/711-1508-LITAIGDVVNHDPVVGDR.json');
+        showSpec('specpanel2','spec1','data/17mix_test2/669-1455-HADSVAELGEQIDNLQR.json');
+	delSpec('specpanel1','spec1');
+	showSpec('specpanel1','spec1','data/17mix_test2/466-1180-VDEDQPFPAVPK.json');
+    </script>
+
+</body>
+</html>
+
+

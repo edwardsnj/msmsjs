@@ -35,7 +35,7 @@ var ss = {}
 function handleclick(elt,path) {
     if (elt.checked) {
       if (!ss[elt.value]) {
-        setSvg(1000, 300, '.spectra', elt.value);
+        appendSpectrum('spectra', elt.value, 1000, 300);
         ss[elt.value] = true;
       }
       var el = document.getElementById('rows');
@@ -46,7 +46,7 @@ function handleclick(elt,path) {
         }
       }
       elt.checked = true;
-      showSpectrum(path,'.'+elt.value);
+      showSpectrum('spectra',elt.value,path,0.5);
     } else {
       elt.checked = true;
     }
