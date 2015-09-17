@@ -607,7 +607,3 @@ function deleteSpectrum(container,tag){
 	d3.selectAll("."+tipcls(container,tag)).remove();
 }
 
-function deleteCanvas(tag){
-	d3.selectAll(tag).remove();
-	d3.selectAll(".d3-tip").remove();
-}
