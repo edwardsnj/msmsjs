@@ -1,0 +1,277 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>CID_FT</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="css/spectrum-style-v1.css" type="text/css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+	<script src="js/spectrum-viewer-v2.2.js"></script>
+	
+	<style> 
+        .scrollit {
+                overflow:scroll;
+                height:400px;
+        }
+        </style>
+
+<script type="text/javascript">
+var ss = {}
+function handleclick(elt) {
+    if (elt.checked) {
+      if (!ss[elt.value]) {
+        setSvg(1000, 400, '.spectra', elt.value);
+        ss[elt.value] = true;
+      }
+      var el = document.getElementById('rows');
+      var checks = el.getElementsByTagName('input');
+      for (var i=0, len=checks.length; i<len; i++) {
+        if ( checks[i].type == 'checkbox' && checks[i].value == elt.value && checks[i] != elt) {
+          checks[i].checked = false;
+        }
+      }
+      elt.checked = true; showSpectrum(elt.getAttribute('specdata'),'.'+elt.value); } else { elt.checked = true; }
+}
+function handleclicknew(elt) {
+    var rowelt = elt
+    var tableelt = rowelt.parentNode;
+    if (rowelt.nextSibling && rowelt.nextSibling.id != 'spectra') {
+      var specelt = document.getElementById('spectra');
+      if (specelt) {
+        tableelt.removeChild(specelt);
+        var newrow = specelt;
+      } else {
+        var newrow = document.createElement("tr");
+	newrow.id = 'spectra';
+        var newtd = document.createElement("td");
+	newtd.setAttribute('colspan',7);
+        var newdiv = document.createElement("div");
+	newdiv.setAttribute('class','spectra');
+        newtd.appendChild(newdiv);
+        newrow.appendChild(newtd);
+      }
+      if (rowelt.nextSibling) {
+	tableelt.insertBefore(newrow,rowelt.nextSibling);
+      } else {
+	tableelt.appendChild(newrow);
+      }
+      if (!specelt) {
+        setSvg(1000, 400, '.spectra', 'spectrum1');
+      } 
+      showSpectrum(elt.getAttribute('specdata'),'.spectrum1');
+    } else {
+      tableelt.removeChild(rowelt.nextSibling);
+    }
+    elt.scrollIntoView();
+}
+function onloadhandler() {
+    var el = document.getElementById('rows');
+    var checks = el.getElementsByTagName('input');
+    var elt = checks[0];
+    elt.checked = true;
+    handleclick(elt);
+}
+
+</script>
+</head>
+<body onload="">
+<table border="0" align="center" width="1000px">
+<thead>
+<tr><th>Scan</th><th>Rank</th><th>Prec. m/z</th><th>Charge</th><th>E-value</th><th>Peptide</th></tr>
+</thead>
+<tbody id="rows">
+
+<tr specdata="data/freese-cid/44-1-DLADELALVDVIEDK.json" onclick="handleclicknew(this);"><td>44</td><td>1</td><td>553.29</td><td>3+</td><td>6.39e-12</td><td>DLADELALVDVIEDK</td></tr>
+<tr specdata="data/freese-cid/179-1-AGFAGDDAPR.json" onclick="handleclicknew(this);"><td>179</td><td>1</td><td>488.73</td><td>2+</td><td>1.22e-12</td><td>AGFAGDDAPR</td></tr>
+<tr specdata="data/freese-cid/186-1-QITVNDLPVGR.json" onclick="handleclicknew(this);"><td>186</td><td>1</td><td>606.34</td><td>2+</td><td>1.93e-14</td><td>QITVNDLPVGR</td></tr>
+<tr specdata="data/freese-cid/188-1-LADALQELR.json" onclick="handleclicknew(this);"><td>188</td><td>1</td><td>514.79</td><td>2+</td><td>1.49e-11</td><td>LADALQELR</td></tr>
+<tr specdata="data/freese-cid/189-1-VLQSALAAIR.json" onclick="handleclicknew(this);"><td>189</td><td>1</td><td>521.33</td><td>2+</td><td>1.50e-12</td><td>VLQSALAAIR</td></tr>
+<tr specdata="data/freese-cid/190-1-LQVVDQPLPVR.json" onclick="handleclicknew(this);"><td>190</td><td>1</td><td>632.38</td><td>2+</td><td>5.37e-13</td><td>LQVVDQPLPVR</td></tr>
+<tr specdata="data/freese-cid/196-1-GIYAYGFEKPSAIQQR.json" onclick="handleclicknew(this);"><td>196</td><td>1</td><td>609.98</td><td>3+</td><td>6.71e-20</td><td>GIYAYGFEKPSAIQQR</td></tr>
+<tr specdata="data/freese-cid/197-1-YDGIILPGK.json" onclick="handleclicknew(this);"><td>197</td><td>1</td><td>488.28</td><td>2+</td><td>1.27e-11</td><td>YDGIILPGK</td></tr>
+<tr specdata="data/freese-cid/198-1-VATWFNQPAR.json" onclick="handleclicknew(this);"><td>198</td><td>1</td><td>595.31</td><td>2+</td><td>1.08e-11</td><td>VATWFNQPAR</td></tr>
+<tr specdata="data/freese-cid/205-1-NIDDGTSDRPYSHALVAGIDRYPR.json" onclick="handleclicknew(this);"><td>205</td><td>1</td><td>672.83</td><td>4+</td><td>2.21e-19</td><td>NIDDGTSDRPYSHALVAGIDRYPR</td></tr>
+<tr specdata="data/freese-cid/208-1-FAAYFQQGDMESNGK.json" onclick="handleclicknew(this);"><td>208</td><td>1</td><td>846.87</td><td>2+</td><td>6.32e-19</td><td>FAAYFQQGDMESNGK</td></tr>
+<tr specdata="data/freese-cid/209-1-TAEELMNFSK.json" onclick="handleclicknew(this);"><td>209</td><td>1</td><td>585.28</td><td>2+</td><td>1.57e-13</td><td>TAEELMNFSK</td></tr>
+<tr specdata="data/freese-cid/210-1-KRGFAFVTFDDHDSVDK.json" onclick="handleclicknew(this);"><td>210</td><td>1</td><td>496.74</td><td>4+</td><td>8.48e-18</td><td>KRGFAFVTFDDHDSVDK</td></tr>
+<tr specdata="data/freese-cid/211-1-EPALNEANLSNLK.json" onclick="handleclicknew(this);"><td>211</td><td>1</td><td>706.87</td><td>2+</td><td>7.92e-16</td><td>EPALNEANLSNLK</td></tr>
+<tr specdata="data/freese-cid/215-1-HIFSEDTSDFSGMSETK.json" onclick="handleclicknew(this);"><td>215</td><td>1</td><td>639.94</td><td>3+</td><td>6.25e-14</td><td>HIFSEDTSDFSGMSETK</td></tr>
+<tr specdata="data/freese-cid/216-1-AQQVSQGLDVLTAK.json" onclick="handleclicknew(this);"><td>216</td><td>1</td><td>729.40</td><td>2+</td><td>1.62e-17</td><td>AQQVSQGLDVLTAK</td></tr>
+<tr specdata="data/freese-cid/221-1-IVVFQYSDGK.json" onclick="handleclicknew(this);"><td>221</td><td>1</td><td>578.31</td><td>2+</td><td>4.83e-13</td><td>IVVFQYSDGK</td></tr>
+<tr specdata="data/freese-cid/222-1-SNPGGFGIAPHCmLDEGTVR.json" onclick="handleclicknew(this);"><td>222</td><td>1</td><td>661.98</td><td>3+</td><td>2.59e-12</td><td>SNPGGFGIAPHCLDEGTVR</td></tr>
+<tr specdata="data/freese-cid/223-1-IEYDCmELVPR.json" onclick="handleclicknew(this);"><td>223</td><td>1</td><td>647.31</td><td>2+</td><td>2.09e-13</td><td>IEYDCELVPR</td></tr>
+<tr specdata="data/freese-cid/224-1-GIYAYGFEKPSAIQQR.json" onclick="handleclicknew(this);"><td>224</td><td>1</td><td>914.47</td><td>2+</td><td>5.30e-16</td><td>GIYAYGFEKPSAIQQR</td></tr>
+<tr specdata="data/freese-cid/226-1-ITIADCmGQLE.json" onclick="handleclicknew(this);"><td>226</td><td>1</td><td>560.27</td><td>2+</td><td>9.75e-11</td><td>ITIADCGQLE</td></tr>
+<tr specdata="data/freese-cid/227-1-HPDSHQLFIGNLPHEVDKSELK.json" onclick="handleclicknew(this);"><td>227</td><td>1</td><td>635.83</td><td>4+</td><td>1.91e-13</td><td>HPDSHQLFIGNLPHEVDKSELK</td></tr>
+<tr specdata="data/freese-cid/229-1-AGNLGGGVVTIER.json" onclick="handleclicknew(this);"><td>229</td><td>1</td><td>621.85</td><td>2+</td><td>2.24e-13</td><td>AGNLGGGVVTIER</td></tr>
+<tr specdata="data/freese-cid/231-1-GVLFASGQNLAR.json" onclick="handleclicknew(this);"><td>231</td><td>1</td><td>616.84</td><td>2+</td><td>3.71e-13</td><td>GVLFASGQNLAR</td></tr>
+<tr specdata="data/freese-cid/243-1-STTSTIESFAAQEK.json" onclick="handleclicknew(this);"><td>243</td><td>1</td><td>500.58</td><td>3+</td><td>4.70e-11</td><td>STTSTIESFAAQEK</td></tr>
+<tr specdata="data/freese-cid/251-1-GFVEPDHYVVVGAQR.json" onclick="handleclicknew(this);"><td>251</td><td>1</td><td>558.29</td><td>3+</td><td>6.35e-15</td><td>GFVEPDHYVVVGAQR</td></tr>
+<tr specdata="data/freese-cid/255-1-IECmGPKYPEAPPFVR.json" onclick="handleclicknew(this);"><td>255</td><td>1</td><td>587.64</td><td>3+</td><td>3.90e-11</td><td>IECGPKYPEAPPFVR</td></tr>
+<tr specdata="data/freese-cid/257-1-IECmGPKYPEAPPFVR.json" onclick="handleclicknew(this);"><td>257</td><td>1</td><td>587.30</td><td>3+</td><td>1.87e-11</td><td>IECGPKYPEAPPFVR</td></tr>
+<tr specdata="data/freese-cid/265-1-QITVNDLPVGR.json" onclick="handleclicknew(this);"><td>265</td><td>1</td><td>606.34</td><td>2+</td><td>1.93e-14</td><td>QITVNDLPVGR</td></tr>
+<tr specdata="data/freese-cid/269-1-YDGIILPGK.json" onclick="handleclicknew(this);"><td>269</td><td>1</td><td>488.28</td><td>2+</td><td>3.32e-11</td><td>YDGIILPGK</td></tr>
+<tr specdata="data/freese-cid/273-1-LQVVDQPLPVR.json" onclick="handleclicknew(this);"><td>273</td><td>1</td><td>632.38</td><td>2+</td><td>4.05e-12</td><td>LQVVDQPLPVR</td></tr>
+<tr specdata="data/freese-cid/282-1-LADALQELR.json" onclick="handleclicknew(this);"><td>282</td><td>1</td><td>514.79</td><td>2+</td><td>4.58e-11</td><td>LADALQELR</td></tr>
+<tr specdata="data/freese-cid/285-1-EPALNEANLSNLK.json" onclick="handleclicknew(this);"><td>285</td><td>1</td><td>706.87</td><td>2+</td><td>1.02e-12</td><td>EPALNEANLSNLK</td></tr>
+<tr specdata="data/freese-cid/292-1-QITVNDLPVGR.json" onclick="handleclicknew(this);"><td>292</td><td>1</td><td>606.34</td><td>2+</td><td>1.93e-14</td><td>QITVNDLPVGR</td></tr>
+<tr specdata="data/freese-cid/294-1-YDGIILPGK.json" onclick="handleclicknew(this);"><td>294</td><td>1</td><td>488.28</td><td>2+</td><td>4.11e-11</td><td>YDGIILPGK</td></tr>
+<tr specdata="data/freese-cid/302-1-LQVVDQPLPVR.json" onclick="handleclicknew(this);"><td>302</td><td>1</td><td>632.38</td><td>2+</td><td>4.24e-11</td><td>LQVVDQPLPVR</td></tr>
+<tr specdata="data/freese-cid/303-1-LADALQELR.json" onclick="handleclicknew(this);"><td>303</td><td>1</td><td>514.79</td><td>2+</td><td>1.49e-11</td><td>LADALQELR</td></tr>
+<tr specdata="data/freese-cid/304-1-DYEEVGADSADGEDEGEEY.json" onclick="handleclicknew(this);"><td>304</td><td>1</td><td>1039.88</td><td>2+</td><td>8.56e-11</td><td>DYEEVGADSADGEDEGEEY</td></tr>
+<tr specdata="data/freese-cid/306-1-DYEEVGVDSVEGEGEEEGEEY.json" onclick="handleclicknew(this);"><td>306</td><td>1</td><td>1174.96</td><td>2+</td><td>4.12e-19</td><td>DYEEVGVDSVEGEGEEEGEEY</td></tr>
+<tr specdata="data/freese-cid/332-1-QITVNDLPVGR.json" onclick="handleclicknew(this);"><td>332</td><td>1</td><td>606.34</td><td>2+</td><td>1.93e-14</td><td>QITVNDLPVGR</td></tr>
+<tr specdata="data/freese-cid/338-1-VVSETNDTK.json" onclick="handleclicknew(this);"><td>338</td><td>1</td><td>496.75</td><td>2+</td><td>1.46e-11</td><td>VVSETNDTK</td></tr>
+<tr specdata="data/freese-cid/339-1-EGNNPAENGDAKTDQAQK.json" onclick="handleclicknew(this);"><td>339</td><td>1</td><td>629.62</td><td>3+</td><td>4.94e-13</td><td>EGNNPAENGDAKTDQAQK</td></tr>
+<tr specdata="data/freese-cid/340-1-VDCmTANTNTCmNK.json" onclick="handleclicknew(this);"><td>340</td><td>1</td><td>699.29</td><td>2+</td><td>2.61e-13</td><td>VDCTANTNTCNK</td></tr>
+<tr specdata="data/freese-cid/347-1-DRSEEERTTEAEKNER.json" onclick="handleclicknew(this);"><td>347</td><td>1</td><td>495.48</td><td>4+</td><td>6.92e-11</td><td>DRSEEERTTEAEKNER</td></tr>
+<tr specdata="data/freese-cid/357-1-LADALQELR.json" onclick="handleclicknew(this);"><td>357</td><td>1</td><td>514.79</td><td>2+</td><td>4.58e-11</td><td>LADALQELR</td></tr>
+<tr specdata="data/freese-cid/359-1-LADALQELR.json" onclick="handleclicknew(this);"><td>359</td><td>1</td><td>515.31</td><td>2+</td><td>4.58e-11</td><td>LADALQELR</td></tr>
+<tr specdata="data/freese-cid/369-1-LQVVDQPLPVR.json" onclick="handleclicknew(this);"><td>369</td><td>1</td><td>632.88</td><td>2+</td><td>5.42e-11</td><td>LQVVDQPLPVR</td></tr>
+<tr specdata="data/freese-cid/370-1-QITVNDLPVGR.json" onclick="handleclicknew(this);"><td>370</td><td>1</td><td>606.34</td><td>2+</td><td>1.04e-13</td><td>QITVNDLPVGR</td></tr>
+<tr specdata="data/freese-cid/378-1-LADALQELR.json" onclick="handleclicknew(this);"><td>378</td><td>1</td><td>514.79</td><td>2+</td><td>4.58e-11</td><td>LADALQELR</td></tr>
+<tr specdata="data/freese-cid/388-1-GIYAYGFEKPSAIQQR.json" onclick="handleclicknew(this);"><td>388</td><td>1</td><td>609.98</td><td>3+</td><td>2.23e-11</td><td>GIYAYGFEKPSAIQQR</td></tr>
+<tr specdata="data/freese-cid/454-1-QITVNDLPVGR.json" onclick="handleclicknew(this);"><td>454</td><td>1</td><td>606.34</td><td>2+</td><td>3.85e-14</td><td>QITVNDLPVGR</td></tr>
+<tr specdata="data/freese-cid/532-1-YSGREGDKHTLSKK.json" onclick="handleclicknew(this);"><td>532</td><td>1</td><td>402.21</td><td>4+</td><td>1.55e-16</td><td>YSGREGDKHTLSKK</td></tr>
+<tr specdata="data/freese-cid/538-1-MASEREGSGSSGTGEQKEDQKEEK.json" onclick="handleclicknew(this);"><td>538</td><td>1</td><td>646.79</td><td>4+</td><td>1.10e-15</td><td>MASEREGSGSSGTGEQKEDQKEEK</td></tr>
+<tr specdata="data/freese-cid/548-1-EREDGKEDEGGNEEEAGKEK.json" onclick="handleclicknew(this);"><td>548</td><td>1</td><td>559.50</td><td>4+</td><td>1.78e-17</td><td>EREDGKEDEGGNEEEAGKEK</td></tr>
+<tr specdata="data/freese-cid/588-1-TDGSQKTESSTEGKEQEEKSGEDGEK.json" onclick="handleclicknew(this);"><td>588</td><td>1</td><td>700.81</td><td>4+</td><td>9.91e-21</td><td>TDGSQKTESSTEGKEQEEKSGEDGEK</td></tr>
+<tr specdata="data/freese-cid/621-1-DADADAGGGADGGDGRGGHSCmR.json" onclick="handleclicknew(this);"><td>621</td><td>1</td><td>508.45</td><td>4+</td><td>3.61e-12</td><td>DADADAGGGADGGDGRGGHSCR</td></tr>
+<tr specdata="data/freese-cid/625-1-KAEGGGGGGRPGAPAAGDGKTEQK.json" onclick="handleclicknew(this);"><td>625</td><td>1</td><td>539.02</td><td>4+</td><td>4.93e-20</td><td>KAEGGGGGGRPGAPAAGDGKTEQK</td></tr>
+<tr specdata="data/freese-cid/627-1-STPKEDDSSASTSQSTR.json" onclick="handleclicknew(this);"><td>627</td><td>1</td><td>595.27</td><td>3+</td><td>1.25e-12</td><td>STPKEDDSSASTSQSTR</td></tr>
+<tr specdata="data/freese-cid/629-1-EESTSSGNVSNRKDETNAR.json" onclick="handleclicknew(this);"><td>629</td><td>1</td><td>520.99</td><td>4+</td><td>1.10e-15</td><td>EESTSSGNVSNRKDETNAR</td></tr>
+<tr specdata="data/freese-cid/634-1-HEEAPGHRPTTNPNASK.json" onclick="handleclicknew(this);"><td>634</td><td>1</td><td>461.48</td><td>4+</td><td>2.21e-20</td><td>HEEAPGHRPTTNPNASK</td></tr>
+<tr specdata="data/freese-cid/635-1-GKADAGKEGNNPAENGDAKTDQAQK.json" onclick="handleclicknew(this);"><td>635</td><td>1</td><td>629.30</td><td>4+</td><td>2.16e-21</td><td>GKADAGKEGNNPAENGDAKTDQAQK</td></tr>
+<tr specdata="data/freese-cid/637-1-ENYSHHTQDDRRDVSR.json" onclick="handleclicknew(this);"><td>637</td><td>1</td><td>504.48</td><td>4+</td><td>1.84e-11</td><td>ENYSHHTQDDRRDVSR</td></tr>
+<tr specdata="data/freese-cid/638-1-SPAECmREEHSKTPEER.json" onclick="handleclicknew(this);"><td>638</td><td>1</td><td>486.22</td><td>4+</td><td>5.05e-15</td><td>SPAECREEHSKTPEER</td></tr>
+<tr specdata="data/freese-cid/640-1-KAEGGGGGGRPGAPAAGDGKTEQK.json" onclick="handleclicknew(this);"><td>640</td><td>1</td><td>718.36</td><td>3+</td><td>7.74e-15</td><td>KAEGGGGGGRPGAPAAGDGKTEQK</td></tr>
+<tr specdata="data/freese-cid/643-1-STPKEDDSSASTSQSTR.json" onclick="handleclicknew(this);"><td>643</td><td>1</td><td>892.40</td><td>2+</td><td>2.86e-14</td><td>STPKEDDSSASTSQSTR</td></tr>
+<tr specdata="data/freese-cid/644-1-DRSEEERTTEAEKNER.json" onclick="handleclicknew(this);"><td>644</td><td>1</td><td>495.48</td><td>4+</td><td>1.23e-12</td><td>DRSEEERTTEAEKNER</td></tr>
+<tr specdata="data/freese-cid/645-1-TVKEEAEKPEREAK.json" onclick="handleclicknew(this);"><td>645</td><td>1</td><td>411.72</td><td>4+</td><td>2.17e-15</td><td>TVKEEAEKPEREAK</td></tr>
+<tr specdata="data/freese-cid/646-1-DSRPSQAAGDNQGDEAK.json" onclick="handleclicknew(this);"><td>646</td><td>1</td><td>582.59</td><td>3+</td><td>1.94e-16</td><td>DSRPSQAAGDNQGDEAK</td></tr>
+<tr specdata="data/freese-cid/647-1-GKADAGKEGNNPAENGDAKTDQAQK.json" onclick="handleclicknew(this);"><td>647</td><td>1</td><td>629.55</td><td>4+</td><td>2.37e-21</td><td>GKADAGKEGNNPAENGDAKTDQAQK</td></tr>
+<tr specdata="data/freese-cid/651-1-QEASKPPRGCmPQANR.json" onclick="handleclicknew(this);"><td>651</td><td>1</td><td>424.71</td><td>4+</td><td>3.43e-11</td><td>QEASKPPRGCPQANR</td></tr>
+<tr specdata="data/freese-cid/654-1-EKPDQDAEGKAEEKEGEK.json" onclick="handleclicknew(this);"><td>654</td><td>1</td><td>504.99</td><td>4+</td><td>1.04e-17</td><td>EKPDQDAEGKAEEKEGEK</td></tr>
+<tr specdata="data/freese-cid/656-1-EGNNPAENGDAKTDQAQK.json" onclick="handleclicknew(this);"><td>656</td><td>1</td><td>629.62</td><td>3+</td><td>2.80e-15</td><td>EGNNPAENGDAKTDQAQK</td></tr>
+<tr specdata="data/freese-cid/657-1-ADAGKEGNNPAENGDAKTDQAQK.json" onclick="handleclicknew(this);"><td>657</td><td>1</td><td>583.02</td><td>4+</td><td>4.49e-17</td><td>ADAGKEGNNPAENGDAKTDQAQK</td></tr>
+<tr specdata="data/freese-cid/659-1-ENQGDETQGQQPPQRR.json" onclick="handleclicknew(this);"><td>659</td><td>1</td><td>623.29</td><td>3+</td><td>4.20e-15</td><td>ENQGDETQGQQPPQRR</td></tr>
+<tr specdata="data/freese-cid/662-1-IDASKNEEDEGHSNSSPR.json" onclick="handleclicknew(this);"><td>662</td><td>1</td><td>657.96</td><td>3+</td><td>4.66e-19</td><td>IDASKNEEDEGHSNSSPR</td></tr>
+<tr specdata="data/freese-cid/663-1-EKPDQDAEGKAEEKEGEK.json" onclick="handleclicknew(this);"><td>663</td><td>1</td><td>672.98</td><td>3+</td><td>6.55e-11</td><td>EKPDQDAEGKAEEKEGEK</td></tr>
+<tr specdata="data/freese-cid/664-1-IDASKNEEDEGHSNSSPR.json" onclick="handleclicknew(this);"><td>664</td><td>1</td><td>493.72</td><td>4+</td><td>5.15e-12</td><td>IDASKNEEDEGHSNSSPR</td></tr>
+<tr specdata="data/freese-cid/665-1-EDGNEEDKENQGDETQGQQPPQRR.json" onclick="handleclicknew(this);"><td>665</td><td>1</td><td>696.81</td><td>4+</td><td>1.44e-19</td><td>EDGNEEDKENQGDETQGQQPPQRR</td></tr>
+<tr specdata="data/freese-cid/676-1-APGTPHSHTKPYVR.json" onclick="handleclicknew(this);"><td>676</td><td>1</td><td>387.71</td><td>4+</td><td>9.21e-12</td><td>APGTPHSHTKPYVR</td></tr>
+<tr specdata="data/freese-cid/679-1-EDGNEEDKENQGDETQGQQPPQRR.json" onclick="handleclicknew(this);"><td>679</td><td>1</td><td>928.74</td><td>3+</td><td>8.15e-19</td><td>EDGNEEDKENQGDETQGQQPPQRR</td></tr>
+<tr specdata="data/freese-cid/688-1-AKAEASSGDHPTDTEMKEEQK.json" onclick="handleclicknew(this);"><td>688</td><td>1</td><td>573.01</td><td>4+</td><td>4.08e-20</td><td>AKAEASSGDHPTDTEMKEEQK</td></tr>
+<tr specdata="data/freese-cid/692-1-EGNNPAENGDAKTDQAQK.json" onclick="handleclicknew(this);"><td>692</td><td>1</td><td>629.95</td><td>3+</td><td>5.07e-14</td><td>EGNNPAENGDAKTDQAQK</td></tr>
+<tr specdata="data/freese-cid/694-1-SAAQAAAQTNSNAAGK.json" onclick="handleclicknew(this);"><td>694</td><td>1</td><td>730.86</td><td>2+</td><td>1.10e-17</td><td>SAAQAAAQTNSNAAGK</td></tr>
+<tr specdata="data/freese-cid/695-1-YHTVNGHNCmEVRK.json" onclick="handleclicknew(this);"><td>695</td><td>1</td><td>538.92</td><td>3+</td><td>1.43e-11</td><td>YHTVNGHNCEVRK</td></tr>
+<tr specdata="data/freese-cid/696-1-AVQAQGGESQQEAQR.json" onclick="handleclicknew(this);"><td>696</td><td>1</td><td>793.88</td><td>2+</td><td>8.65e-18</td><td>AVQAQGGESQQEAQR</td></tr>
+<tr specdata="data/freese-cid/701-1-AAEDDEDDDVDTKKQKTDEDD.json" onclick="handleclicknew(this);"><td>701</td><td>1</td><td>600.00</td><td>4+</td><td>4.82e-15</td><td>AAEDDEDDDVDTKKQKTDEDD</td></tr>
+<tr specdata="data/freese-cid/704-1-YHTINGHNAEVRK.json" onclick="handleclicknew(this);"><td>704</td><td>1</td><td>385.45</td><td>4+</td><td>1.21e-16</td><td>YHTINGHNAEVRK</td></tr>
+<tr specdata="data/freese-cid/705-1-SDGAPASDSKPGSSEAAPSSK.json" onclick="handleclicknew(this);"><td>705</td><td>1</td><td>644.96</td><td>3+</td><td>1.18e-14</td><td>SDGAPASDSKPGSSEAAPSSK</td></tr>
+<tr specdata="data/freese-cid/708-1-YHTINGHNAEVRK.json" onclick="handleclicknew(this);"><td>708</td><td>1</td><td>513.60</td><td>3+</td><td>5.31e-15</td><td>YHTINGHNAEVRK</td></tr>
+<tr specdata="data/freese-cid/709-1-RGEEGHDPKEPEQLRK.json" onclick="handleclicknew(this);"><td>709</td><td>1</td><td>476.99</td><td>4+</td><td>5.00e-12</td><td>RGEEGHDPKEPEQLRK</td></tr>
+<tr specdata="data/freese-cid/710-1-SDGAPASDSKPGSSEAAPSSK.json" onclick="handleclicknew(this);"><td>710</td><td>1</td><td>966.94</td><td>2+</td><td>6.11e-15</td><td>SDGAPASDSKPGSSEAAPSSK</td></tr>
+<tr specdata="data/freese-cid/712-1-IKKPEGKPDQKFDQK.json" onclick="handleclicknew(this);"><td>712</td><td>1</td><td>447.25</td><td>4+</td><td>1.62e-12</td><td>IKKPEGKPDQKFDQK</td></tr>
+<tr specdata="data/freese-cid/714-1-NDKSEEEQSSSSVKKDETNVK.json" onclick="handleclicknew(this);"><td>714</td><td>1</td><td>592.78</td><td>4+</td><td>4.11e-17</td><td>NDKSEEEQSSSSVKKDETNVK</td></tr>
+<tr specdata="data/freese-cid/717-1-SEEEQSSSSVKKDETNVK.json" onclick="handleclicknew(this);"><td>717</td><td>1</td><td>503.49</td><td>4+</td><td>1.46e-12</td><td>SEEEQSSSSVKKDETNVK</td></tr>
+<tr specdata="data/freese-cid/719-1-VVNGAAASQPPSKR.json" onclick="handleclicknew(this);"><td>719</td><td>1</td><td>461.26</td><td>3+</td><td>4.10e-12</td><td>VVNGAAASQPPSKR</td></tr>
+<tr specdata="data/freese-cid/722-1-ITTGSSSAGTQSSTSNR.json" onclick="handleclicknew(this);"><td>722</td><td>1</td><td>821.39</td><td>2+</td><td>3.89e-21</td><td>ITTGSSSAGTQSSTSNR</td></tr>
+<tr specdata="data/freese-cid/724-1-AAEDDEDDDVDTKK.json" onclick="handleclicknew(this);"><td>724</td><td>1</td><td>522.55</td><td>3+</td><td>3.56e-13</td><td>AAEDDEDDDVDTKK</td></tr>
+<tr specdata="data/freese-cid/726-1-AVAREESGKPGAHVTVK.json" onclick="handleclicknew(this);"><td>726</td><td>1</td><td>434.74</td><td>4+</td><td>6.87e-12</td><td>AVAREESGKPGAHVTVK</td></tr>
+<tr specdata="data/freese-cid/730-1-SEEEQSSSSVKKDETNVK.json" onclick="handleclicknew(this);"><td>730</td><td>1</td><td>670.99</td><td>3+</td><td>3.77e-13</td><td>SEEEQSSSSVKKDETNVK</td></tr>
+<tr specdata="data/freese-cid/731-1-YYGGGSEGGRAPKR.json" onclick="handleclicknew(this);"><td>731</td><td>1</td><td>364.43</td><td>4+</td><td>4.93e-12</td><td>YYGGGSEGGRAPKR</td></tr>
+<tr specdata="data/freese-cid/732-1-AKPTSDKPGSPYR.json" onclick="handleclicknew(this);"><td>732</td><td>1</td><td>351.69</td><td>4+</td><td>2.27e-11</td><td>AKPTSDKPGSPYR</td></tr>
+<tr specdata="data/freese-cid/733-1-EKEKEDDEEEEDEDASGGDQDQEERR.json" onclick="handleclicknew(this);"><td>733</td><td>1</td><td>774.81</td><td>4+</td><td>3.51e-22</td><td>EKEKEDDEEEEDEDASGGDQDQEERR</td></tr>
+<tr specdata="data/freese-cid/734-1-LSAKPAPPKPEPKPK.json" onclick="handleclicknew(this);"><td>734</td><td>1</td><td>396.99</td><td>4+</td><td>1.42e-14</td><td>LSAKPAPPKPEPKPK</td></tr>
+<tr specdata="data/freese-cid/737-1-AAEDDEDDDVDTKK.json" onclick="handleclicknew(this);"><td>737</td><td>1</td><td>783.32</td><td>2+</td><td>7.09e-19</td><td>AAEDDEDDDVDTKK</td></tr>
+<tr specdata="data/freese-cid/746-1-NEGSESAPEGQAQQR.json" onclick="handleclicknew(this);"><td>746</td><td>1</td><td>794.35</td><td>2+</td><td>2.01e-18</td><td>NEGSESAPEGQAQQR</td></tr>
+<tr specdata="data/freese-cid/748-1-THVTHHPVSDHEATLR.json" onclick="handleclicknew(this);"><td>748</td><td>1</td><td>459.98</td><td>4+</td><td>1.33e-16</td><td>THVTHHPVSDHEATLR</td></tr>
+<tr specdata="data/freese-cid/751-1-LSAKPAPPKPEPKPK.json" onclick="handleclicknew(this);"><td>751</td><td>1</td><td>528.99</td><td>3+</td><td>1.80e-15</td><td>LSAKPAPPKPEPKPK</td></tr>
+<tr specdata="data/freese-cid/754-1-YHTVNGHNCmEVR.json" onclick="handleclicknew(this);"><td>754</td><td>1</td><td>372.17</td><td>4+</td><td>1.22e-12</td><td>YHTVNGHNCEVR</td></tr>
+<tr specdata="data/freese-cid/756-1-YHTVNGHNCmEVR.json" onclick="handleclicknew(this);"><td>756</td><td>1</td><td>495.89</td><td>3+</td><td>2.94e-18</td><td>YHTVNGHNCEVR</td></tr>
+<tr specdata="data/freese-cid/764-1-NEGSESAPEGQAQQR.json" onclick="handleclicknew(this);"><td>764</td><td>1</td><td>529.90</td><td>3+</td><td>9.34e-14</td><td>NEGSESAPEGQAQQR</td></tr>
+<tr specdata="data/freese-cid/765-1-EEAPKAEPEKTEGAAEAK.json" onclick="handleclicknew(this);"><td>765</td><td>1</td><td>628.98</td><td>3+</td><td>4.28e-19</td><td>EEAPKAEPEKTEGAAEAK</td></tr>
+<tr specdata="data/freese-cid/766-1-KLEGNSPQGSNQGVK.json" onclick="handleclicknew(this);"><td>766</td><td>1</td><td>514.93</td><td>3+</td><td>1.40e-16</td><td>KLEGNSPQGSNQGVK</td></tr>
+<tr specdata="data/freese-cid/782-1-AQHEDQVEQYKK.json" onclick="handleclicknew(this);"><td>782</td><td>1</td><td>501.58</td><td>3+</td><td>1.40e-13</td><td>AQHEDQVEQYKK</td></tr>
+<tr specdata="data/freese-cid/784-1-AQHEDQVEQYKK.json" onclick="handleclicknew(this);"><td>784</td><td>1</td><td>376.44</td><td>4+</td><td>2.97e-15</td><td>AQHEDQVEQYKK</td></tr>
+<tr specdata="data/freese-cid/787-1-EAPAPPKAEAK.json" onclick="handleclicknew(this);"><td>787</td><td>1</td><td>554.80</td><td>2+</td><td>4.46e-14</td><td>EAPAPPKAEAK</td></tr>
+<tr specdata="data/freese-cid/792-1-ETQAQACmPQEGTEAHGAR.json" onclick="handleclicknew(this);"><td>792</td><td>1</td><td>647.62</td><td>3+</td><td>2.68e-12</td><td>ETQAQACPQEGTEAHGAR</td></tr>
+<tr specdata="data/freese-cid/794-1-EAPAPPKAEAK.json" onclick="handleclicknew(this);"><td>794</td><td>1</td><td>370.20</td><td>3+</td><td>1.46e-12</td><td>EAPAPPKAEAK</td></tr>
+<tr specdata="data/freese-cid/797-1-DAAAAKEEAPKAEPEK.json" onclick="handleclicknew(this);"><td>797</td><td>1</td><td>552.28</td><td>3+</td><td>5.47e-15</td><td>DAAAAKEEAPKAEPEK</td></tr>
+<tr specdata="data/freese-cid/798-1-QIESTETSCmHGCmR.json" onclick="handleclicknew(this);"><td>798</td><td>1</td><td>522.22</td><td>3+</td><td>7.74e-11</td><td>QIESTETSCHGCR</td></tr>
+<tr specdata="data/freese-cid/799-1-AQHEDQVEQYKK.json" onclick="handleclicknew(this);"><td>799</td><td>1</td><td>751.86</td><td>2+</td><td>2.42e-16</td><td>AQHEDQVEQYKK</td></tr>
+<tr specdata="data/freese-cid/801-1-CmAAEREEPPEQR.json" onclick="handleclicknew(this);"><td>801</td><td>1</td><td>491.22</td><td>3+</td><td>8.38e-13</td><td>CAAEREEPPEQR</td></tr>
+<tr specdata="data/freese-cid/804-1-VHGPGIQSGTTNKPNK.json" onclick="handleclicknew(this);"><td>804</td><td>1</td><td>545.62</td><td>3+</td><td>7.80e-13</td><td>VHGPGIQSGTTNKPNK</td></tr>
+<tr specdata="data/freese-cid/810-1-YHTINGHNAEVRK.json" onclick="handleclicknew(this);"><td>810</td><td>1</td><td>386.21</td><td>4+</td><td>2.30e-12</td><td>YHTINGHNAEVRK</td></tr>
+<tr specdata="data/freese-cid/816-1-LSAKPAPPKPEPKPR.json" onclick="handleclicknew(this);"><td>816</td><td>1</td><td>403.99</td><td>4+</td><td>3.48e-13</td><td>LSAKPAPPKPEPKPR</td></tr>
+<tr specdata="data/freese-cid/816-2-LSAKPAPPKPEPRPK.json" onclick="handleclicknew(this);"><td>816</td><td>2</td><td>403.99</td><td>4+</td><td>4.67e-12</td><td>LSAKPAPPKPEPRPK</td></tr>
+<tr specdata="data/freese-cid/817-1-DHRPPCmAQEAPR.json" onclick="handleclicknew(this);"><td>817</td><td>1</td><td>478.56</td><td>3+</td><td>1.07e-15</td><td>DHRPPCAQEAPR</td></tr>
+<tr specdata="data/freese-cid/819-1-PNCmSCmATGGSCmTCmAGSCmK.json" onclick="handleclicknew(this);"><td>819</td><td>1</td><td>967.85</td><td>2+</td><td>5.90e-23</td><td>PNCSCATGGSCTCAGSCK</td></tr>
+<tr specdata="data/freese-cid/819-2-PNCmSCmTTGGSCmACmAGSCmK.json" onclick="handleclicknew(this);"><td>819</td><td>2</td><td>967.85</td><td>2+</td><td>2.91e-11</td><td>PNCSCTTGGSCACAGSCK</td></tr>
+<tr specdata="data/freese-cid/820-1-HVATEYQENKAPGK.json" onclick="handleclicknew(this);"><td>820</td><td>1</td><td>524.60</td><td>3+</td><td>8.15e-18</td><td>HVATEYQENKAPGK</td></tr>
+<tr specdata="data/freese-cid/821-1-TCmTESDVSQSQNSR.json" onclick="handleclicknew(this);"><td>821</td><td>1</td><td>799.84</td><td>2+</td><td>4.38e-18</td><td>TCTESDVSQSQNSR</td></tr>
+<tr specdata="data/freese-cid/822-1-GGASSSCmCmEEEQTQGR.json" onclick="handleclicknew(this);"><td>822</td><td>1</td><td>871.84</td><td>2+</td><td>3.81e-18</td><td>GGASSSCCEEEQTQGR</td></tr>
+<tr specdata="data/freese-cid/823-1-RLTEQKGEQQIQK.json" onclick="handleclicknew(this);"><td>823</td><td>1</td><td>529.29</td><td>3+</td><td>1.45e-12</td><td>RLTEQKGEQQIQK</td></tr>
+<tr specdata="data/freese-cid/829-1-SAAQAAAQTNSNAAGK.json" onclick="handleclicknew(this);"><td>829</td><td>1</td><td>731.35</td><td>2+</td><td>2.74e-16</td><td>SAAQAAAQTNSNAAGK</td></tr>
+<tr specdata="data/freese-cid/832-1-AEVKKPAAAAAPGTAEK.json" onclick="handleclicknew(this);"><td>832</td><td>1</td><td>537.30</td><td>3+</td><td>1.75e-11</td><td>AEVKKPAAAAAPGTAEK</td></tr>
+<tr specdata="data/freese-cid/833-1-RQQQAATSESSQSEASVR.json" onclick="handleclicknew(this);"><td>833</td><td>1</td><td>650.65</td><td>3+</td><td>9.36e-14</td><td>RQQQAATSESSQSEASVR</td></tr>
+<tr specdata="data/freese-cid/844-1-VAETANEEEVKK.json" onclick="handleclicknew(this);"><td>844</td><td>1</td><td>673.84</td><td>2+</td><td>6.41e-16</td><td>VAETANEEEVKK</td></tr>
+<tr specdata="data/freese-cid/845-1-MQNDTAENETTEKEEK.json" onclick="handleclicknew(this);"><td>845</td><td>1</td><td>632.94</td><td>3+</td><td>3.72e-15</td><td>MQNDTAENETTEKEEK</td></tr>
+<tr specdata="data/freese-cid/846-1-TDPPDGQQDSECmNR.json" onclick="handleclicknew(this);"><td>846</td><td>1</td><td>809.82</td><td>2+</td><td>2.34e-16</td><td>TDPPDGQQDSECNR</td></tr>
+<tr specdata="data/freese-cid/847-1-NGGGGGGGGSGLHCmAGNGGGGGGGPR.json" onclick="handleclicknew(this);"><td>847</td><td>1</td><td>679.96</td><td>3+</td><td>8.99e-21</td><td>NGGGGGGGGSGLHCAGNGGGGGGGPR</td></tr>
+<tr specdata="data/freese-cid/848-1-DSDAGSSTPTTSTR.json" onclick="handleclicknew(this);"><td>848</td><td>1</td><td>691.81</td><td>2+</td><td>1.02e-12</td><td>DSDAGSSTPTTSTR</td></tr>
+<tr specdata="data/freese-cid/849-1-RAAEDDEDDDVDTK.json" onclick="handleclicknew(this);"><td>849</td><td>1</td><td>531.89</td><td>3+</td><td>1.43e-12</td><td>RAAEDDEDDDVDTK</td></tr>
+<tr specdata="data/freese-cid/850-1-SNNSETSSVAQSGSESK.json" onclick="handleclicknew(this);"><td>850</td><td>1</td><td>849.88</td><td>2+</td><td>7.35e-20</td><td>SNNSETSSVAQSGSESK</td></tr>
+<tr specdata="data/freese-cid/858-1-IQQQQPPPGEK.json" onclick="handleclicknew(this);"><td>858</td><td>1</td><td>625.33</td><td>2+</td><td>1.05e-12</td><td>IQQQQPPPGEK</td></tr>
+<tr specdata="data/freese-cid/860-1-HTIPEEETHR.json" onclick="handleclicknew(this);"><td>860</td><td>1</td><td>416.87</td><td>3+</td><td>6.19e-12</td><td>HTIPEEETHR</td></tr>
+<tr specdata="data/freese-cid/862-1-RAAEDDEDDDVDTK.json" onclick="handleclicknew(this);"><td>862</td><td>1</td><td>797.33</td><td>2+</td><td>4.62e-12</td><td>RAAEDDEDDDVDTK</td></tr>
+<tr specdata="data/freese-cid/863-1-VQQSSESSTSSPSQHEATPGAR.json" onclick="handleclicknew(this);"><td>863</td><td>1</td><td>753.35</td><td>3+</td><td>1.97e-15</td><td>VQQSSESSTSSPSQHEATPGAR</td></tr>
+<tr specdata="data/freese-cid/864-1-EVDSKPVSQKPPPPSEK.json" onclick="handleclicknew(this);"><td>864</td><td>1</td><td>616.99</td><td>3+</td><td>1.34e-12</td><td>EVDSKPVSQKPPPPSEK</td></tr>
+<tr specdata="data/freese-cid/871-1-LSAKPPAKVEAKPK.json" onclick="handleclicknew(this);"><td>871</td><td>1</td><td>366.73</td><td>4+</td><td>8.37e-12</td><td>LSAKPPAKVEAKPK</td></tr>
+<tr specdata="data/freese-cid/876-1-DADSQNPDAPEGK.json" onclick="handleclicknew(this);"><td>876</td><td>1</td><td>672.77</td><td>2+</td><td>1.29e-11</td><td>DADSQNPDAPEGK</td></tr>
+<tr specdata="data/freese-cid/878-1-NQGGGLSSSGAGEGQGPKK.json" onclick="handleclicknew(this);"><td>878</td><td>1</td><td>572.62</td><td>3+</td><td>9.89e-12</td><td>NQGGGLSSSGAGEGQGPKK</td></tr>
+<tr specdata="data/freese-cid/879-1-GAAANPENEDQQQR.json" onclick="handleclicknew(this);"><td>879</td><td>1</td><td>764.34</td><td>2+</td><td>2.85e-15</td><td>GAAANPENEDQQQR</td></tr>
+<tr specdata="data/freese-cid/880-1-ADAGKEGNNPAENGDAKTDQAQKAEGAGDAK.json" onclick="handleclicknew(this);"><td>880</td><td>1</td><td>757.85</td><td>4+</td><td>4.12e-25</td><td>ADAGKEGNNPAENGDAKTDQAQKAEGAGDAK</td></tr>
+<tr specdata="data/freese-cid/888-1-YAAPSKEEEGGGDGHSEAAEK.json" onclick="handleclicknew(this);"><td>888</td><td>1</td><td>706.98</td><td>3+</td><td>1.09e-22</td><td>YAAPSKEEEGGGDGHSEAAEK</td></tr>
+<tr specdata="data/freese-cid/890-1-SHSPSASQSGSQLR.json" onclick="handleclicknew(this);"><td>890</td><td>1</td><td>476.90</td><td>3+</td><td>2.18e-12</td><td>SHSPSASQSGSQLR</td></tr>
+<tr specdata="data/freese-cid/893-1-VCmQGEREMAGDNK.json" onclick="handleclicknew(this);"><td>893</td><td>1</td><td>498.55</td><td>3+</td><td>7.40e-12</td><td>VCQGEREMAGDNK</td></tr>
+<tr specdata="data/freese-cid/895-1-EGLNKPESNEQR.json" onclick="handleclicknew(this);"><td>895</td><td>1</td><td>467.56</td><td>3+</td><td>8.05e-13</td><td>EGLNKPESNEQR</td></tr>
+<tr specdata="data/freese-cid/898-1-AGAGPGGPPQKPAPSSQR.json" onclick="handleclicknew(this);"><td>898</td><td>1</td><td>553.96</td><td>3+</td><td>7.74e-17</td><td>AGAGPGGPPQKPAPSSQR</td></tr>
+<tr specdata="data/freese-cid/903-1-EDGNEEDKENQGDETQGQQPPQR.json" onclick="handleclicknew(this);"><td>903</td><td>1</td><td>876.71</td><td>3+</td><td>3.16e-20</td><td>EDGNEEDKENQGDETQGQQPPQR</td></tr>
+<tr specdata="data/freese-cid/907-1-NQGGGLSSSGAGEGQGPKK.json" onclick="handleclicknew(this);"><td>907</td><td>1</td><td>858.42</td><td>2+</td><td>1.07e-19</td><td>NQGGGLSSSGAGEGQGPKK</td></tr>
+<tr specdata="data/freese-cid/912-1-AEASSGDHPTDTEMKEEQK.json" onclick="handleclicknew(this);"><td>912</td><td>1</td><td>523.23</td><td>4+</td><td>3.78e-11</td><td>AEASSGDHPTDTEMKEEQK</td></tr>
+<tr specdata="data/freese-cid/915-1-AEASSGDHPTDTEMKEEQK.json" onclick="handleclicknew(this);"><td>915</td><td>1</td><td>697.31</td><td>3+</td><td>6.60e-17</td><td>AEASSGDHPTDTEMKEEQK</td></tr>
+<tr specdata="data/freese-cid/924-1-LQQQQRPEDAEDGAEGGGKR.json" onclick="handleclicknew(this);"><td>924</td><td>1</td><td>543.01</td><td>4+</td><td>6.12e-11</td><td>LQQQQRPEDAEDGAEGGGKR</td></tr>
+<tr specdata="data/freese-cid/929-1-TATPQQAQEVHEK.json" onclick="handleclicknew(this);"><td>929</td><td>1</td><td>489.58</td><td>3+</td><td>1.27e-14</td><td>TATPQQAQEVHEK</td></tr>
+<tr specdata="data/freese-cid/931-1-GEEHCmGHLIEAHK.json" onclick="handleclicknew(this);"><td>931</td><td>1</td><td>379.93</td><td>4+</td><td>3.02e-12</td><td>GEEHCGHLIEAHK</td></tr>
+<tr specdata="data/freese-cid/932-1-KPLKPCmCmACmPETK.json" onclick="handleclicknew(this);"><td>932</td><td>1</td><td>530.26</td><td>3+</td><td>7.39e-14</td><td>KPLKPCCACPETK</td></tr>
+<tr specdata="data/freese-cid/934-1-RSEKPPAGSICmR.json" onclick="handleclicknew(this);"><td>934</td><td>1</td><td>453.24</td><td>3+</td><td>2.72e-11</td><td>RSEKPPAGSICR</td></tr>
+<tr specdata="data/freese-cid/935-1-YHTINGHNAEVRK.json" onclick="handleclicknew(this);"><td>935</td><td>1</td><td>385.70</td><td>4+</td><td>6.03e-14</td><td>YHTINGHNAEVRK</td></tr>
+<tr specdata="data/freese-cid/937-1-SPSDCmCmHNQCmAAGCmTGPR.json" onclick="handleclicknew(this);"><td>937</td><td>1</td><td>678.93</td><td>3+</td><td>2.30e-21</td><td>SPSDCCHNQCAAGCTGPR</td></tr>
+<tr specdata="data/freese-cid/939-1-YAEERDRAEAEAR.json" onclick="handleclicknew(this);"><td>939</td><td>1</td><td>392.19</td><td>4+</td><td>4.96e-13</td><td>YAEERDRAEAEAR</td></tr>
+<tr specdata="data/freese-cid/941-1-TATPQQAQEVHEK.json" onclick="handleclicknew(this);"><td>941</td><td>1</td><td>733.87</td><td>2+</td><td>5.89e-15</td><td>TATPQQAQEVHEK</td></tr>
+<tr specdata="data/freese-cid/945-1-ANSEHNGPMDGQSGTETK.json" onclick="handleclicknew(this);"><td>945</td><td>1</td><td>620.60</td><td>3+</td><td>2.32e-22</td><td>ANSEHNGPMDGQSGTETK</td></tr>
+<tr specdata="data/freese-cid/947-1-ETGHVSGPDGQNPEK.json" onclick="handleclicknew(this);"><td>947</td><td>1</td><td>517.92</td><td>3+</td><td>1.41e-11</td><td>ETGHVSGPDGQNPEK</td></tr>
+<tr specdata="data/freese-cid/949-1-HEERQDEHGYISR.json" onclick="handleclicknew(this);"><td>949</td><td>1</td><td>414.69</td><td>4+</td><td>4.21e-14</td><td>HEERQDEHGYISR</td></tr>
+<tr specdata="data/freese-cid/950-1-LSEHATAPTR.json" onclick="handleclicknew(this);"><td>950</td><td>1</td><td>361.52</td><td>3+</td><td>4.45e-11</td><td>LSEHATAPTR</td></tr>
+<tr specdata="data/freese-cid/954-1-NEPQNATGAPGR.json" onclick="handleclicknew(this);"><td>954</td><td>1</td><td>606.29</td><td>2+</td><td>3.62e-14</td><td>NEPQNATGAPGR</td></tr>
+<tr specdata="data/freese-cid/963-1-HEAQRLEQEAR.json" onclick="handleclicknew(this);"><td>963</td><td>1</td><td>456.23</td><td>3+</td><td>1.72e-11</td><td>HEAQRLEQEAR</td></tr>
+<tr specdata="data/freese-cid/966-1-AGVQADEDEDGDEKDEK.json" onclick="handleclicknew(this);"><td>966</td><td>1</td><td>617.26</td><td>3+</td><td>1.03e-14</td><td>AGVQADEDEDGDEKDEK</td></tr>
+<tr specdata="data/freese-cid/967-1-AGTEDEEEEEEGRR.json" onclick="handleclicknew(this);"><td>967</td><td>1</td><td>545.90</td><td>3+</td><td>6.68e-14</td><td>AGTEDEEEEEEGRR</td></tr>
+<tr specdata="data/freese-cid/978-1-GSQITQQSTNQSR.json" onclick="handleclicknew(this);"><td>978</td><td>1</td><td>717.85</td><td>2+</td><td>5.26e-16</td><td>GSQITQQSTNQSR</td></tr>
+<tr specdata="data/freese-cid/980-1-TGVIEHEHPVNK.json" onclick="handleclicknew(this);"><td>980</td><td>1</td><td>453.91</td><td>3+</td><td>9.82e-12</td><td>TGVIEHEHPVNK</td></tr>
+<tr specdata="data/freese-cid/982-1-RPDQQLQGEGK.json" onclick="handleclicknew(this);"><td>982</td><td>1</td><td>419.22</td><td>3+</td><td>8.66e-12</td><td>RPDQQLQGEGK</td></tr>
+<tr specdata="data/freese-cid/987-1-RPDQQLQGEGK.json" onclick="handleclicknew(this);"><td>987</td><td>1</td><td>628.32</td><td>2+</td><td>7.89e-13</td><td>RPDQQLQGEGK</td></tr>
+<tr specdata="data/freese-cid/988-1-TPQQAQEVHEK.json" onclick="handleclicknew(this);"><td>988</td><td>1</td><td>647.82</td><td>2+</td><td>4.90e-11</td><td>TPQQAQEVHEK</td></tr>
+<tr specdata="data/freese-cid/989-1-LSEHATAPTR.json" onclick="handleclicknew(this);"><td>989</td><td>1</td><td>541.78</td><td>2+</td><td>3.91e-13</td><td>LSEHATAPTR</td></tr>
+<tr specdata="data/freese-cid/990-1-SSVNSHMTQSTDSR.json" onclick="handleclicknew(this);"><td>990</td><td>1</td><td>512.89</td><td>3+</td><td>5.07e-17</td><td>SSVNSHMTQSTDSR</td></tr>
+<tr specdata="data/freese-cid/991-1-LSSGNEENKKEEDNDEIK.json" onclick="handleclicknew(this);"><td>991</td><td>1</td><td>693.32</td><td>3+</td><td>5.74e-20</td><td>LSSGNEENKKEEDNDEIK</td></tr>
+<tr specdata="data/freese-cid/995-1-KQPGGQSSTASAGPPS.json" onclick="handleclicknew(this);"><td>995</td><td>1</td><td>728.86</td><td>2+</td><td>2.51e-13</td><td>KQPGGQSSTASAGPPS</td></tr>
+<tr specdata="data/freese-cid/999-1-ESAGADTRPTVRPR.json" onclick="handleclicknew(this);"><td>999</td><td>1</td><td>378.95</td><td>4+</td><td>2.49e-12</td><td>ESAGADTRPTVRPR</td></tr>
+</tbody>
+</table>
+</body>
+</html>
+
