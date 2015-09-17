@@ -590,3 +590,8 @@ function deleteGroup(tag){
 	d3.selectAll(tag).selectAll(".group").remove();
 	d3.selectAll(".d3-tip").remove();
 }
+
+function deleteCanvas(tag){
+	d3.selectAll(tag).remove();
+	d3.selectAll(".d3-tip").remove();
+}
