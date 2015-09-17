@@ -1,3 +1,3 @@
 # msmsjs
 
-Demo [http://rawgit.com/edwardsnj/msmsjs/master/demo.html]
+Try [demo.html](http://rawgit.com/edwardsnj/msmsjs/master/demo.html).
