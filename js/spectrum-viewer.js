@@ -4,11 +4,11 @@
 //
 // This code was written by Chris Trenkov
 // Not intended for public use
-// Last updated 8/31/2015
+// Last updated 9/18/2015
 
 
 function spcls(container,tag) {
-        return (container+'-'+tag);
+    return (container+'-'+tag);
 }
 
 function tipcls(container,tag) {
@@ -94,21 +94,25 @@ function showSpectrum(container, tag, path, tolerance){
 		.attr("class", "resize");
 	
 	d3.json(path, function (data){
-	
+		console.log(path);
+
 		var spectra = data.spectra;
 		var peaks = spectra[0].peaks;
 		var peptide = spectra[0].annotations[0].peptide;
+		var modifications = spectra[0].annotations[0].modifications;
 		var fragments = spectra[0].annotations[0].fragments;
 		var newFragments = [];
 		var usedPeak = {}
 		
+
+
 		var maxPeaksInt = d3.max(peaks, function (d){ return d.int; });
 		var minPeaksInt = d3.min(peaks, function (d){ return d.int; });
 		
 		var maxPeaksMZ = d3.max(peaks, function (d){ return d.mz; });
 		var minPeaksMZ = d3.max(peaks, function (d){ return d.mz; });
 		
-		fragments.forEach(appendFragments);		<!-- gets all of the fragment that meet the threshhold and 
+		fragments.forEach(appendFragments);		
 		newFragments.forEach(drawSymbole);
 		
 		var domain = {min: 0, max: containerWidth};
@@ -173,7 +177,7 @@ function showSpectrum(container, tag, path, tolerance){
 			.attr("width", canvasWidth)
 			.attr("height", canvasHeight);	
 		
-		var dePeakRenderOmatic = yAxisGroup.append("rect") <!-- Renders a white rect under the yaxis to cover the peaks, it is really dumb, I know
+		var dePeakRenderOmatic = yAxisGroup.append("rect") // Renders a white rect under the yaxis to cover the peaks, it is really dumb, I know
 			.attr("x", -margin.left)
 			.attr("width", margin.left)
 			.attr("height", containerHeight)
@@ -192,15 +196,22 @@ function showSpectrum(container, tag, path, tolerance){
 		
 		
 		
-		var peptide = peptideGroup.selectAll("text") 
+		var peptides = peptideGroup.selectAll("text") 
 			.data(peptide)
 			.enter()
 				.append("text")
 				.attr("x", function (d, i){ return i * peptideSpace + peptidePadding; })
 				.attr("y", peptidePadding)
 				.attr("font-size", peptidePixelSize)
-				.text(function (d){ return d + ""}); <!-- TODO ADD subscripts
+				.text(function (d){ return d + ""})
+				.each(function (d, i){
+					if(modifications[i] != ""){
+						d3.select(this).attr("fill", colorTheme.b);
+					}
+				});
 		
+
+
 		var peakElements = peakGroup.selectAll("rect")
 			.data(peaks)
 			.enter() 
@@ -380,6 +391,8 @@ function showSpectrum(container, tag, path, tolerance){
 		}
 		
 		function resizeEnded(){
+			console.log(d3.select("svg").select(".group").select(".chartGroup").select(".x"));
+
 			xAxisScale.domain([clickScale(newDomain.min), clickScale(newDomain.max)]);
 			xAxisGroup.transition().duration(zoomDuration).call(xAxis);
 			
@@ -510,7 +523,7 @@ function showSpectrum(container, tag, path, tolerance){
 		}
 		
 		function hideToolTip(){
-			d3.selectAll("."+tipcls(container,tag))				<!-- Allows for hover functionality, might remove later
+			d3.selectAll("."+tipcls(container,tag))				
 				.on("mouseover", function (){ 
 					d3.select("."+tipcls(container,tag))
 						.transition()
@@ -534,7 +547,12 @@ function showSpectrum(container, tag, path, tolerance){
 		}
 
 	});
- }
+}
+ 
+function setSpectraDomain(tag){
+	var test = d3.selectAll("."+spcls(container,tag));
+	console.log(test);
+}
  
 var superScript = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 var subscripts = "₀₁₂₃₄₅₆₇₈₉";
@@ -550,6 +568,16 @@ function getSuperscript(num){
 	return newSuperScript;
 }
 
+function getSubscript(num){
+	num += "";
+	var newSubScripts = "";
+		
+	for(var i = 0; i < num.length; i++){
+		newSubScripts += subscripts[parseInt(num[i])];
+	}
+	return newSubScripts;
+}
+
 function getLabel(d) {
   if ((d.type == 'y-ion') || (d.type == 'b-ion')) {
     if (d.z == 1) {
@@ -561,16 +589,6 @@ function getLabel(d) {
   } else {
     return d.simplelabel;
   }
-}
-
-function getSubscript(num){
-	num += "";
-	var newSubScripts = "";
-		
-	for(var i = 0; i < num.length; i++){
-		newSubScripts += subscripts[parseInt(num[i])];
-	}
-	return newSubScripts;
 }
 
 function toolTip(d) {
@@ -590,8 +608,8 @@ function toolTip(d) {
 function roundWidthZeros(num){
 	num = Math.round(num * 100) / 100;
 	if (num == 0) {
-	  return "0.00";
-        }
+		return "0.00";
+    }
 	if((num + "").split(".")[1].length <= 1) num += "0"; // adds a zero if the length of the str after the . is less than 2
 		
 	return num;
