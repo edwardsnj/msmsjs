@@ -23,6 +23,8 @@ svg {
 	line-height: 1;
 	padding: 10px; 
 	border-radius: 2px;
+	background: rgba(225, 225, 225, .8);
+	color: #f77;
 }
 
 .d3-tip:after {
@@ -41,9 +43,4 @@ svg {
 	margin: -1px 0 0 0;
 	top: 100%;
 	left: 0;
-}
-
-.d3-tip.peak-tip {
-	background: rgba(225, 225, 225, .8);
-	color: #f77;
 }

@@ -12,7 +12,7 @@ function spcls(container, tag){
 }
 
 function tipcls(type, container, tag){
-	return type + " " + spcls(container,tag);
+	return type + " tip-" + spcls(container,tag);
 }
 
 function appendSpectrum(container, tag, width, height){
@@ -173,7 +173,7 @@ function showSpectrum(container, tag, path, tolerance){
 			.attr('class', 'd3-tip ' + tipcls('peptide-tip', container, tag))
 			.offset([-40, 0])
 			.html(function (d){
-				return "<span style='color: #f77'>" + toolTip(d) + "</span>";
+				return "<span style='color: #f3f3f3'>" + d + "</span>";
 			});
 
 		var background = backgroudGroup.append("rect")
@@ -213,7 +213,10 @@ function showSpectrum(container, tag, path, tolerance){
 				.text(function (d){ return d + ""})
 				.each(function (d, i){
 					if(modifications[i] != ""){
-						d3.select(this).attr("fill", colorTheme.b);
+						d3.select(this).attr("fill", colorTheme.b)
+							.on("mouseover", function (d, i){
+								console.log(d);
+							});
 					}
 				});
 		
@@ -554,9 +557,9 @@ function showSpectrum(container, tag, path, tolerance){
 		}
 
 		function selectToolTip(type){	
-			if(type == "*") return d3.selectAll("d3-tip");	//selectAll feature
+			if(type == "*") return d3.selectAll(".d3-tip");	//selectAll tool tip feature, out of lazyness :p
 
-			return d3.selectAll("." + type + "." + spcls(container, tag));	//Selections only work with a periode in the middle
+			return d3.selectAll("." + type + ".tip-" + spcls(container, tag));	//Selections only work with a periode in the middle
 		}
 
 	});
@@ -592,29 +595,31 @@ function getSubscript(num){
 }
 
 function getLabel(d) {
-  if ((d.type == 'y-ion') || (d.type == 'b-ion')) {
-    if (d.z == 1) {
-      return (d.label + getSubscript(d.subscript));
-    } else {
-      return (d.label + getSubscript(d.subscript) + getSuperscript(d.z) + '\u207A');
-      // return d.simplelabel;
-    }
-  } else {
-    return d.simplelabel;
-  }
+  	if ((d.type == 'y-ion') || (d.type == 'b-ion')) {
+   	 	if (d.z == 1) {
+      		return (d.label + getSubscript(d.subscript));
+    	} else {
+      		return (d.label + getSubscript(d.subscript) + getSuperscript(d.z) + '\u207A');
+      		// return d.simplelabel;
+    	}
+  	} else {
+    	return d.simplelabel;
+  	}
 }
 
 function toolTip(d) {
 	var tt = roundWidthZeros(d.mz);
 	if (d.delta == undefined) {
-	  // peak, not fragment
-	  return tt;
-        }
+	 	// peak, not fragment
+	 	return tt;
+    }
+	
 	if( d.delta >= 0) {
-	  tt += (" (+" + roundWidthZeros(Math.abs(d.delta)) + ")");
-        } else {
-	  tt += (" (-" + roundWidthZeros(Math.abs(d.delta)) + ")");
-        }
+	 	tt += (" (+" + roundWidthZeros(Math.abs(d.delta)) + ")");
+    } else {
+	 	tt += (" (-" + roundWidthZeros(Math.abs(d.delta)) + ")");
+    }
+	
 	return tt;
 }
 	
@@ -629,12 +634,12 @@ function roundWidthZeros(num){
 }
  
 function clearSpectrum(container,tag){
-	d3.selectAll("."+spcls(container,tag)).selectAll(".group").remove();
-	d3.selectAll("."+tipcls(container,tag)).remove();
+	d3.selectAll("." + spcls(container,tag)).selectAll(".group").remove();
+	d3.selectAll(".tip-" + spcls(container, tag)).remove();
 }
 
 function deleteSpectrum(container,tag){
-	d3.selectAll("."+spcls(container,tag)).remove();
-	d3.selectAll("."+tipcls(container,tag)).remove();
+	d3.selectAll("." + spcls(container,tag)).remove();
+	d3.selectAll(".tip-" + spcls(container,tag)).remove();
 }
 
