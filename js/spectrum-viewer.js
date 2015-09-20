@@ -169,6 +169,13 @@ function showSpectrum(container, tag, path, tolerance){
 				return "<span style='color: #3f3f3f' > " + toolTip(d) + " </span>";
 			});
 			
+		var peptideTip = d3.tip()
+			.attr('class', 'd3-tip ' + tipcls('peptide-tip', container, tag))
+			.offset([-40, 0])
+			.html(function (d){
+				return "<span style='color: #f77'>" + toolTip(d) + "</span>";
+			});
+
 		var background = backgroudGroup.append("rect")
 			.attr("x", 0)
 			.attr("y", 0)
@@ -319,7 +326,7 @@ function showSpectrum(container, tag, path, tolerance){
 			newDomain.min = xAxisScale.range()[0];
 			newDomain.max = xAxisScale.range()[1];
 
-			tooltipTransition(0, 500, 0);
+			tooltipTransition("*", 0, 500, 0);
 		}
 		
 		function dragStarted(){
@@ -406,7 +413,7 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("transform", "translate(" + [-domain.min * scale, 0] + ")scale(" + [scale, 1] + ")")
 				.selectAll("rect")
 				.attr("width", 2 / scale)
-				.each("end", function(){ tooltipTransition(0, 500, 0); });
+				.each("end", function(){ tooltipTransition("*", 0, 500, 0); });
 	
 			fragmentLabelGroup.selectAll("text") .attr("transform", "scale(" + [1 / scale, 1] + ")");
 				
@@ -421,7 +428,7 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("height", containerHeight)
 				.remove();
 
-			tooltipTransition(0, 500, 0);
+			tooltipTransition("*", 0, 500, 0);
 		}	
 		
 		<!-- peptide symbol rendering
@@ -527,8 +534,7 @@ function showSpectrum(container, tag, path, tolerance){
 		function hideToolTip(type){
 			selectToolTip(type)			
 				.on("mouseover", function (){ 
-					d3.select("." + tipcls(type, container,tag))
-						.transition()
+					selectToolTip(type).transition()
 						.delay(0);
 
 				})
@@ -547,8 +553,10 @@ function showSpectrum(container, tag, path, tolerance){
 				.style('pointer-events', 'none');
 		}
 
-		function selectToolTip(type){	//Selections only work with a periode in the middle
-			return d3.selectAll("." + type + "." + spcls(container, tag));
+		function selectToolTip(type){	
+			if(type == "*") return d3.selectAll("d3-tip");	//selectAll feature
+
+			return d3.selectAll("." + type + "." + spcls(container, tag));	//Selections only work with a periode in the middle
 		}
 
 	});
