@@ -168,7 +168,7 @@ function showSpectrum(container, tag, path, tolerance){
 			.html(function(d) {
 				return "<span style='color: #3f3f3f' > " + toolTip(d) + " </span>";
 			});
-			
+
 		var peptideTip = d3.tip()
 			.attr('class', 'd3-tip ' + tipcls('peptide-tip', container, tag))
 			.offset([-40, 0])
@@ -212,10 +212,14 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("font-size", peptidePixelSize)
 				.text(function (d){ return d + ""})
 				.each(function (d, i){
-					if(modifications[i] != ""){
+					var mod = modifications[i];
+					if(mod != ""){		//If there is a modification to a peptide it adds a mouse event that will call a peptide-tip
 						d3.select(this).attr("fill", colorTheme.b)
 							.on("mouseover", function (d, i){
-								console.log(d);
+								peptideTip.offset([peptidePixelSize, 0]);
+								showToolTip("peptide-tip");
+								peptideTip.show(mod.toUpperCase());
+								hideToolTip("peptide-tip");
 							});
 					}
 				});
@@ -302,7 +306,8 @@ function showSpectrum(container, tag, path, tolerance){
 		
 
 
-		containerGroup.call(peakTip);	
+		containerGroup.call(peakTip);
+		containerGroup.call(peptideTip);
 		selectGroup.call(drag);
 		xAxisGroup.transition().duration(transitionDelay).call(xAxis);
 		yAxisGroup.transition().duration(transitionDelay).call(yAxis);
