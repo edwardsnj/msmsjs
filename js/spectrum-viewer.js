@@ -2,17 +2,17 @@
 //
 // Copyright (c) 2015 Chris Trenkov
 //
-// This code was written by Chris Trenkov
+// This code was written by Chris Trenkov and Nathan Edwards
 // Not intended for public use
 // Last updated 9/18/2015
 
 
-function spcls(container,tag) {
-    return (container+'-'+tag);
+function spcls(container, tag){
+        return (container + '-' + tag);
 }
 
-function tipcls(container,tag) {
-	return "d3-tip-"+spcls(container,tag)
+function tipcls(type, container, tag){
+	return type + " " + spcls(container,tag);
 }
 
 function appendSpectrum(container, tag, width, height){
@@ -162,8 +162,8 @@ function showSpectrum(container, tag, path, tolerance){
 			.ticks(12)
 			.tickSize(3);
 		
-		var tip = d3.tip()
-			.attr('class', 'd3-tip '+tipcls(container,tag))
+		var peakTip = d3.tip()
+			.attr('class', 'd3-tip ' + tipcls("peak-tip", container, tag))
 			.offset([-40, 0])
 			.html(function(d) {
 				return "<span style='color: #3f3f3f' > " + toolTip(d) + " </span>";
@@ -225,10 +225,10 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("fill", "white")
 				.attr("opacity", "1")
 				.on("mouseover", function (d){ 
-					tip.offset([-10, 0]);
-					showToolTip();
-					tip.show(d);
-					hideToolTip();
+					peakTip.offset([-10, 0]);
+					showToolTip("peak-tip");
+					peakTip.show(d);
+					hideToolTip("peak-tip");
 				});
 		
 		var fragmentElements = fragmentGroup.selectAll("rect")
@@ -243,10 +243,10 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("height", 0)
 				.attr("fill", function (d){ return d.color; })
 				.on("mouseover", function (d){ 
-					tip.offset([-23, 0]);
-					showToolTip();
-					tip.show(d); 
-					hideToolTip(); 
+					peakTip.offset([-23, 0]);
+					showToolTip("peak-tip");
+					peakTip.show(d); 
+					hideToolTip("peak-tip"); 
 				});
 
 		var fragmentLabels = fragmentLabelGroup.selectAll("text")
@@ -292,7 +292,7 @@ function showSpectrum(container, tag, path, tolerance){
 		
 
 
-		containerGroup.call(tip);	
+		containerGroup.call(peakTip);	
 		selectGroup.call(drag);
 		xAxisGroup.transition().duration(transitionDelay).call(xAxis);
 		yAxisGroup.transition().duration(transitionDelay).call(yAxis);
@@ -514,36 +514,41 @@ function showSpectrum(container, tag, path, tolerance){
 			return maxPeaksInt * baseHeightPercent <= height;
 		}
 		
-		function showToolTip(){
-			d3.selectAll("."+tipcls(container,tag)).transition()
+		
+
+		function showToolTip(type){
+			selectToolTip(type).transition()
 				.delay(0)
 				.duration(0)
 				.style("opacity", 1)
 				.style('pointer-events', 'all')
 		}
 		
-		function hideToolTip(){
-			d3.selectAll("."+tipcls(container,tag))				
+		function hideToolTip(type){
+			selectToolTip(type)			
 				.on("mouseover", function (){ 
-					d3.select("."+tipcls(container,tag))
+					d3.select("." + tipcls(type, container,tag))
 						.transition()
 						.delay(0);
 
 				})
 				.on("mouseout", function (){ 
-					tooltipTransition(0, 500, 0);
+					tooltipTransition(type, 0, 500, 0);
 				});
 
-			tooltipTransition(1500, 500, 0);
+			tooltipTransition(type, 1500, 500, 0);
 		}
 		
-		function tooltipTransition(delay, duration, opacity){
-			d3.selectAll("."+tipcls(container,tag))
-				.transition()
+		function tooltipTransition(type, delay, duration, opacity){
+			selectToolTip(type).transition()
 				.delay(delay)
 				.duration(duration)
 				.style("opacity", opacity)
 				.style('pointer-events', 'none');
+		}
+
+		function selectToolTip(type){	//Selections only work with a periode in the middle
+			return d3.selectAll("." + type + "." + spcls(container, tag));
 		}
 
 	});
