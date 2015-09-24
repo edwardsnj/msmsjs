@@ -6,7 +6,6 @@
 // Not intended for public use
 // Last updated 9/18/2015
 
-
 function spcls(container, tag){
         return (container + '-' + tag);
 }
@@ -15,12 +14,31 @@ function tipcls(type, container, tag){
 	return type + " tip-" + spcls(container,tag);
 }
 
+var cTags = {};
+var cDims = {};
+var cMaxMZ = {};
+var cCallbacks = {};
+
 function appendSpectrum(container, tag, width, height){
+        if (container in cDims) {
+            // Force additional spectra in a container to match width and height;
+            width,height = cDims[container];
+        } 	
 	d3.select("."+container)
 		.append("svg")
 		.attr("class", spcls(container,tag))
 		.attr("width", width)
 		.attr("height", height);
+	if (!(container in cTags)) {
+	    // first reference to a specific container
+	    cTags[container] = [];
+	    cTags[container].push(tag);
+	    cDims[container] = (width,height);
+	    cMaxMZ[container] = {'_max_': 0.0}
+	    cCallbacks[container] = {}
+	} else {
+	    cTags[container].push(tag);
+	}
 }
 
 function showSpectrum(container, tag, path, tolerance){
@@ -29,7 +47,7 @@ function showSpectrum(container, tag, path, tolerance){
 
 	var margin = {top: 10, bottom: 20, left: 80, right: 40};
 
-	var canvas =  d3.selectAll("svg."+spcls(container,tag));
+	var canvas =  d3.select("svg."+spcls(container,tag));
 
 	var canvasWidth = canvas.attr("width");
 	var canvasHeight = canvas.attr("height");
@@ -94,7 +112,6 @@ function showSpectrum(container, tag, path, tolerance){
 		.attr("class", "resize");
 	
 	d3.json(path, function (data){
-		console.log(path);
 
 		var spectra = data.spectra;
 		var peaks = spectra[0].peaks;
@@ -104,14 +121,16 @@ function showSpectrum(container, tag, path, tolerance){
 		var newFragments = [];
 		var usedPeak = {}
 		
-
-
 		var maxPeaksInt = d3.max(peaks, function (d){ return d.int; });
-		var minPeaksInt = d3.min(peaks, function (d){ return d.int; });
-		
 		var maxPeaksMZ = d3.max(peaks, function (d){ return d.mz; });
-		var minPeaksMZ = d3.max(peaks, function (d){ return d.mz; });
-		
+		cMaxMZ[container][tag] = maxPeaksMZ;
+		cMaxMZ[container]['_max_'] = 0.0;
+		cTags[container].forEach(function (item,index,array) {
+		    if (cMaxMZ[container]['_max_'] < cMaxMZ[container][item]) {
+			cMaxMZ[container]['_max_'] = cMaxMZ[container][item];
+		    }
+		});
+
 		fragments.forEach(appendFragments);		
 		newFragments.forEach(drawSymbole);
 		
@@ -143,8 +162,6 @@ function showSpectrum(container, tag, path, tolerance){
 			.domain([0, containerWidth])
 			.range(["skyBlue", "steelblue"]);
 
-		
-
 		var drag = d3.behavior.drag()
 			.on("dragstart", dragStarted)
 			.on("drag", dragged)
@@ -166,7 +183,7 @@ function showSpectrum(container, tag, path, tolerance){
 			.attr('class', 'd3-tip ' + tipcls("peak-tip", container, tag))
 			.offset([-40, 0])
 			.html(function(d) {
-				return "<span style='color: #3f3f3f' > " + toolTip(d) + " </span>";
+				return "<span style='color: #3f3f3f' > " + toolTip(d,maxPeaksInt) + " </span>";
 			});
 
 		var peptideTip = d3.tip()
@@ -312,7 +329,7 @@ function showSpectrum(container, tag, path, tolerance){
 		xAxisGroup.transition().duration(transitionDelay).call(xAxis);
 		yAxisGroup.transition().duration(transitionDelay).call(yAxis);
 		
-
+		setTimeout(function(){resetDomain();resizeEnded(true,true);},transitionDuration+transitionDelay);
 				
 		var originalX;
 		var originalY;
@@ -329,19 +346,21 @@ function showSpectrum(container, tag, path, tolerance){
 		
 		var zoomDuration = 1000;
 
-		
 		function resetDomain(){
-			newDomain.min = xAxisScale.range()[0];
-			newDomain.max = xAxisScale.range()[1];
+			domainmax = Math.ceil((cMaxMZ[container]['_max_']+0)/100.0)*100.0;
+		        setDomain(0,domainmax);
+		}
+
+		function setDomain(minmz,maxmz) {		
+			newDomain.min = widthScale(minmz);
+		    	newDomain.max = widthScale(maxmz);
 
 			tooltipTransition("*", 0, 500, 0);
 		}
-		
+
 		function dragStarted(){
 			originalX = d3.mouse(this)[0];
 			originalY = d3.mouse(this)[1];
-			
-			
 			
 			isLeftClick = d3.event.sourceEvent.which == 1;
 			isMiddleClick = d3.event.sourceEvent.which == 2;
@@ -349,7 +368,6 @@ function showSpectrum(container, tag, path, tolerance){
 			
 			if(isLeftClick) resizeStarted();
 			else if(isMiddleClick || isRightClick) resetDomain();
-
 		}
 		
 		function dragged(){
@@ -363,8 +381,6 @@ function showSpectrum(container, tag, path, tolerance){
 			resizeEnded();
 		}
 		
-		
-		
 		function resizeStarted(){
 			resetDomain();
 			
@@ -374,11 +390,11 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("rx", 5)
 				.attr("ry", 5)
 				.attr("width", 0)
-				.attr("height", 0)
+				.attr("height", 2)
 				.attr("stroke", "steelblue")
 				.attr("stroke-width", 2)
-				.attr("stroke-dasharray", [10, 5])
 				.attr("fill", "none");
+				// .attr("stroke-dasharray", [10, 5])
 		}
 		
 		function resized(){
@@ -386,8 +402,8 @@ function showSpectrum(container, tag, path, tolerance){
 			resizeHeight = lastMouseY - originalY;
 			
 			resizeGroup.selectAll("rect")
-				.attr("width", Math.abs(resizeWidth))
-				.attr("height", Math.abs(resizeHeight));
+				.attr("width", Math.abs(resizeWidth));
+				// .attr("height", Math.abs(resizeHeight));
 			
 			if(resizeWidth < 0){
 				resizeGroup.selectAll("rect")
@@ -405,8 +421,12 @@ function showSpectrum(container, tag, path, tolerance){
 			}
 		}
 		
-		function resizeEnded(){
-			console.log(d3.select("svg").select(".group").select(".chartGroup").select(".x"));
+		function resizeEnded(cascade,metoo){
+			if (cascade == undefined) { cascade = true; }
+			if (metoo == undefined) { metoo = false; }
+
+			console.log("resizeEnded");
+			// console.log(d3.select("svg").select(".group").select(".chartGroup").select(".x"));
 
 			xAxisScale.domain([clickScale(newDomain.min), clickScale(newDomain.max)]);
 			xAxisGroup.transition().duration(zoomDuration).call(xAxis);
@@ -424,24 +444,36 @@ function showSpectrum(container, tag, path, tolerance){
 				.each("end", function(){ tooltipTransition("*", 0, 500, 0); });
 	
 			fragmentLabelGroup.selectAll("text") .attr("transform", "scale(" + [1 / scale, 1] + ")");
+
+			if (cascade) {
+			    cTags[container].forEach(function (item,index,array) {
+				if (item != tag || metoo) {
+				    cCallbacks[container][item](clickScale(newDomain.min),clickScale(newDomain.max));
+			        }
+			    });
+			}
 				
+			// resizeGroup.selectAll("rect")
+			//	.transition()
+			//	.duration(zoomDuration)
+			//	.attr("x", 0)
+			//	.attr("y", 0)
+			//	.attr("rx", 10)
+			//	.attr("ry", 10)
+			//	.attr("width", containerWidth)
+			//	.attr("height", containerHeight)
+			//	.remove();
+
 			resizeGroup.selectAll("rect")
-				.transition()
-				.duration(zoomDuration)
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("rx", 10)
-				.attr("ry", 10)
-				.attr("width", containerWidth)
-				.attr("height", containerHeight)
 				.remove();
 
 			tooltipTransition("*", 0, 500, 0);
 		}	
+
+
+		cCallbacks[container][tag] = (function (a,b) {setDomain(a,b); resizeEnded(false,false);});
 		
 		<!-- peptide symbol rendering
-		
-		
 		
 		function drawSymbole(fragment, i){	<!-- TODO REDO
 			
@@ -529,7 +561,6 @@ function showSpectrum(container, tag, path, tolerance){
 			return maxPeaksInt * baseHeightPercent <= height;
 		}
 		
-		
 
 		function showToolTip(type){
 			selectToolTip(type).transition()
@@ -568,11 +599,7 @@ function showSpectrum(container, tag, path, tolerance){
 		}
 
 	});
-}
- 
-function setSpectraDomain(tag){
-	var test = d3.selectAll("."+spcls(container,tag));
-	console.log(test);
+
 }
  
 var superScript = "⁰¹²³⁴⁵⁶⁷⁸⁹";
@@ -612,18 +639,19 @@ function getLabel(d) {
   	}
 }
 
-function toolTip(d) {
+function toolTip(d,bp) {
 	var tt = roundWidthZeros(d.mz);
+	tt = tt + ", " + Math.floor(100*d.int/bp)+"%"
 	if (d.delta == undefined) {
 	 	// peak, not fragment
 	 	return tt;
-    }
+    	}
 	
 	if( d.delta >= 0) {
 	 	tt += (" (+" + roundWidthZeros(Math.abs(d.delta)) + ")");
-    } else {
+    	} else {
 	 	tt += (" (-" + roundWidthZeros(Math.abs(d.delta)) + ")");
-    }
+    	}
 	
 	return tt;
 }
@@ -646,5 +674,16 @@ function clearSpectrum(container,tag){
 function deleteSpectrum(container,tag){
 	d3.selectAll("." + spcls(container,tag)).remove();
 	d3.selectAll(".tip-" + spcls(container,tag)).remove();
+	for (var i=cTags[container];i--;) {
+		if (cTags[container][i] == tag) {
+			cTags[container].splice(i,1);
+	        }
+        }
+	cMaxMZ[container]['_max_'] = 0.0;
+	cTags[container].forEach(function (item,index,array) {
+	    if (cMaxMZ[container]['_max_'] < cMaxMZ[container][item]) {
+		cMaxMZ[container]['_max_'] = cMaxMZ[container][item];
+	    }
+	});
 }
 
