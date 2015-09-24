@@ -231,11 +231,12 @@ function showSpectrum(container, tag, path, tolerance){
 				.each(function (d, i){
 					var mod = modifications[i];
 					if(mod != ""){		//If there is a modification to a peptide it adds a mouse event that will call a peptide-tip
+					        var aa = peptide[i]
 						d3.select(this).attr("fill", colorTheme.b)
 							.on("mouseover", function (d, i){
 								peptideTip.offset([peptidePixelSize, 0]);
 								showToolTip("peptide-tip");
-								peptideTip.show(mod.toUpperCase());
+								peptideTip.show(mod+aa);
 								hideToolTip("peptide-tip");
 							});
 					}
@@ -425,7 +426,6 @@ function showSpectrum(container, tag, path, tolerance){
 			if (cascade == undefined) { cascade = true; }
 			if (metoo == undefined) { metoo = false; }
 
-			console.log("resizeEnded");
 			// console.log(d3.select("svg").select(".group").select(".chartGroup").select(".x"));
 
 			xAxisScale.domain([clickScale(newDomain.min), clickScale(newDomain.max)]);
