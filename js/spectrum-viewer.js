@@ -394,7 +394,8 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("height", 2)
 				.attr("stroke", "steelblue")
 				.attr("stroke-width", 2)
-				.attr("fill", "none");
+				.attr("fill", "none")
+				.attr("opacity", 1);
 				// .attr("stroke-dasharray", [10, 5])
 		}
 		
@@ -416,10 +417,10 @@ function showSpectrum(container, tag, path, tolerance){
 				newDomain.max = (lastMouseX / scale) + domain.min;
 			}
 				
-			if(resizeHeight < 0){
-				resizeGroup.selectAll("rect")
-					.attr("y", lastMouseY);
-			}
+			//if(resizeHeight < 0){
+			// 	resizeGroup.selectAll("rect")
+			// 		.attr("y", lastMouseY);
+			//}
 		}
 		
 		function resizeEnded(cascade,metoo){
@@ -453,19 +454,16 @@ function showSpectrum(container, tag, path, tolerance){
 			    });
 			}
 				
-			// resizeGroup.selectAll("rect")
-			//	.transition()
-			//	.duration(zoomDuration)
-			//	.attr("x", 0)
-			//	.attr("y", 0)
-			//	.attr("rx", 10)
-			//	.attr("ry", 10)
-			//	.attr("width", containerWidth)
-			//	.attr("height", containerHeight)
-			//	.remove();
-
 			resizeGroup.selectAll("rect")
+				.transition()
+				.duration(zoomDuration)
+				.attr("x", 0)
+				.attr("width", containerWidth)
+				.attr("opacity", 0)
 				.remove();
+
+			// resizeGroup.selectAll("rect")
+			// 	.remove();
 
 			tooltipTransition("*", 0, 500, 0);
 		}	
