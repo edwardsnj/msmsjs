@@ -1,6 +1,6 @@
 // d3 Mass Spectrum Viewer
 //
-// Copyright (c) 2015 Chris Trenkov
+// Copyright (c) 2015
 //
 // This code was written by Chris Trenkov and Nathan Edwards
 // Not intended for public use
@@ -63,14 +63,13 @@ function showSpectrum(container, tag, path, tolerance){
 	var transitionDelay = 300;
 	var transitionType = "bounce";
 
+
+
 	var baseHeightPercent = .05;
 	var colorTheme = {b: "steelBlue", y: "tomato", other: "grey"};	
 
 	var group = canvas.append("g")
 		.attr("class", "group");	<!-- TODO, Change all of the attr class tags to something better
-	
-	var backgroudGroup = group.append("g")
-		.attr("class", "backgroudGroup");
 	
 	var selectGroup = group.append("g")
 		.attr("class", "select")
@@ -110,6 +109,9 @@ function showSpectrum(container, tag, path, tolerance){
 	
 	var resizeGroup = selectGroup.append("g")
 		.attr("class", "resize");
+
+	var menuGroup = group.append("g")
+		.attr("class", "menu");
 	
 	d3.json(path, function (data){
 
@@ -130,6 +132,31 @@ function showSpectrum(container, tag, path, tolerance){
 			cMaxMZ[container]['_max_'] = cMaxMZ[container][item];
 		    }
 		});
+
+		var controls = [];
+
+		var exit = {
+			name: "exit",
+			path: "res/CloseCanvasIcon.png",
+			exec: function (){ 
+				deleteSpectrum(container, tag); 
+			}
+		}
+
+		var example = {
+			name: "example",
+			path: "res/Example.png",
+			exec: function (){
+				setDomain(-1000, 1000);
+				//resizeStarted();
+				resizeEnded();
+			}
+		}
+
+		controls.push(exit);
+		controls.push(example);
+
+		
 
 		fragments.forEach(appendFragments);		
 		newFragments.forEach(drawSymbole);
@@ -193,13 +220,7 @@ function showSpectrum(container, tag, path, tolerance){
 				return "<span style='color: #f3f3f3'>" + d + "</span>";
 			});
 
-		var background = backgroudGroup.append("rect")
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("rx", 10)
-			.attr("ry", 10)
-			.attr("width", canvasWidth)
-			.attr("height", canvasHeight);	
+		
 		
 		var dePeakRenderOmatic = yAxisGroup.append("rect") // Renders a white rect under the yaxis to cover the peaks, it is really dumb, I know
 			.attr("x", -margin.left)
@@ -219,6 +240,35 @@ function showSpectrum(container, tag, path, tolerance){
 			});
 		
 		
+
+		// var menuArea = menuGroup.append("rect")
+		// 	.attr("x", canvasWidth - controls.length * 80)
+		// 	.attr("width", controls.length * 80)
+		// 	.attr("height", 80)
+		// 	.attr("rx", 10)
+		// 	.attr("ry", 10)
+		// 	.attr("fill", "steelblue")
+		// 	.attr("opacity", 0)
+		// 	.style("pointer-events", "all")
+		// 	.on("mouseover", showMenu)
+		// 	.on("mouseout", hideMenu);
+
+		var menuItems = menuGroup.selectAll("image")		//all of the individual control items. 
+			.data(controls)
+			.enter()
+				.append("svg:image")
+				.attr("xlink:href", function (d){ return d.path; })
+				.attr("x", function (d, i){ return canvasWidth - (i + 1) * 60; })
+				.attr("y", 0)
+				.attr("width", 60)
+				.attr("height", 60)
+				.attr("opacity", .1)
+				.style("pointer-events", "all")
+				.on("mouseover", showMenu)
+				.on("mouseout", hideMenu)
+				.on("click", function (d){ d.exec(); });
+
+
 		
 		var peptides = peptideGroup.selectAll("text") 
 			.data(peptide)
@@ -231,7 +281,7 @@ function showSpectrum(container, tag, path, tolerance){
 				.each(function (d, i){
 					var mod = modifications[i];
 					if(mod != ""){		//If there is a modification to a peptide it adds a mouse event that will call a peptide-tip
-					        var aa = peptide[i]
+					    var aa = peptide[i]
 						d3.select(this).attr("fill", colorTheme.b)
 							.on("mouseover", function (d, i){
 								peptideTip.offset([peptidePixelSize, 0]);
@@ -444,7 +494,7 @@ function showSpectrum(container, tag, path, tolerance){
 				.attr("width", 2 / scale)
 				.each("end", function(){ tooltipTransition("*", 0, 500, 0); });
 	
-			fragmentLabelGroup.selectAll("text") .attr("transform", "scale(" + [1 / scale, 1] + ")");
+			fragmentLabelGroup.selectAll("text").attr("transform", "scale(" + [1 / scale, 1] + ")");
 
 			if (cascade) {
 			    cTags[container].forEach(function (item,index,array) {
@@ -468,6 +518,20 @@ function showSpectrum(container, tag, path, tolerance){
 			tooltipTransition("*", 0, 500, 0);
 		}	
 
+		function showMenu(){
+			menuItems
+				.transition()
+				.duration(500)
+				.attr("opacity", 1);
+			
+		}
+
+		function hideMenu(){
+			menuItems
+				.transition()
+				.duration(500)
+				.attr("opacity", 0);
+		}
 
 		cCallbacks[container][tag] = (function (a,b) {setDomain(a,b); resizeEnded(false,false);});
 		
